@@ -452,7 +452,7 @@ transform-origin: 0 0;
 
 ## Canvas
 
-* Canvas提供了非常多的JavaScript绘图API（比如：绘制路径、矩形、圆、文本和图像等方法），与<canvas>元素可以绘制各种2D图形。
+* Canvas提供了非常多的JavaScript绘图API（比如：绘制路径、矩形、圆、文本和图像等方法），与`<canvas>`元素可以绘制各种2D图形。
 * Canvas API 主要**聚焦于 2D 图形**。当然也可以**使用`<canvas>`元素对象的 WebGL API 来绘制 2D 和 3D 图形**。
 * 可以**用于动画、游戏画面、数据可视化、图片编辑以及实时视频处理**等方面。
 

@@ -81,10 +81,10 @@ sticky: true
   * version： 指定使用svg的版本，值为 1.0 和 1.1，并没有 2.0，不写version就是2.0。
   * baseProfile：SVG 2 之前，**version 和 baseProfile 属性用来验证和识别 SVG 版本**。**而SVG2后不推荐使用这两个属性了**。
   * **width / height** ：指定svg画布（视口）的宽和高，默认值分别为300和150，默认使用px单位。
-  * **xmlns**：给svg元素帮定一个**命名空间**（http://www.w3.org/2000/svg）意味着这个 <svg> 标签和它的子元素都属于该命名空间下。
+  * **xmlns**：给svg元素帮定一个**命名空间**（http://www.w3.org/2000/svg）意味着这个 `<svg>` 标签和它的子元素都属于该命名空间下。
 
 
-* 第三步：**在< svg >元素中添加 图形（比如：< rect >） 元素**
+* 第三步：**在`< svg >`元素中添加 图形（比如：`<rect>`） 元素**
 * 第四步：在**浏览器直接预览 或 嵌入到 HTML中预览**（嵌入HTML有6种方案）
 
 **.svg文件**
@@ -344,7 +344,7 @@ viewBox = `<min-x> <min-y> <width> <height>`，比如：**viewBox =' 50 50 100 1
 
   ✓ `<width>` `<height>`确定该视图框的宽度和高度。
 
-  ➢ 宽度和高度不必与父<svg>元素上设置的宽度和高度相同。
+  ➢ 宽度和高度不必与父`<svg>`元素上设置的宽度和高度相同。
 
   ➢ 宽度和高度负值无效，为 0 是禁用元素的显示。
 
@@ -498,7 +498,7 @@ preserveAspectRatio：xMinYMin表示viewBox等比例拉伸后，靠左上角显�
 
 ![pCAZhVJ.png](https://s1.ax1x.com/2023/06/08/pCAZhVJ.png)
 
-<circle>元素3 个基本属性
+`<circle>`元素3 个基本属性
 
 * r ：圆的半径
 * cx ：圆心的 x轴位置
@@ -510,7 +510,7 @@ preserveAspectRatio：xMinYMin表示viewBox等比例拉伸后，靠左上角显�
 
 ![pCAZ55R.png](https://s1.ax1x.com/2023/06/08/pCAZ55R.png)
 
-<ellipse>元素4 个基本属性
+`<ellipse>`元素4 个基本属性
 
  rx :椭圆的 x轴半径
 
@@ -524,7 +524,7 @@ preserveAspectRatio：xMinYMin表示viewBox等比例拉伸后，靠左上角显�
 
 ![pCAZoP1.png](https://s1.ax1x.com/2023/06/08/pCAZoP1.png)
 
-<line>元素4 个基本属性
+`<line>`元素4 个基本属性
 
 * x1 :起点的 x 轴位置
 
@@ -545,7 +545,7 @@ preserveAspectRatio：xMinYMin表示viewBox等比例拉伸后，靠左上角显�
 
 ![pCAZT8x.png](https://s1.ax1x.com/2023/06/08/pCAZT8x.png)
 
-<polyline>元素1 个基本属性
+`<polyline>`元素1 个基本属性
 
 * points : 点集数列。每个数字用空白、逗号、终止命令符或者换行符分隔开（成对的数字就行）。
   * 每个点必须包含 2 个数字，一个是 x 坐标，一个是 y 坐标。
@@ -604,7 +604,7 @@ preserveAspectRatio：xMinYMin表示viewBox等比例拉伸后，靠左上角显�
 
 ![pCAZqKO.png](https://s1.ax1x.com/2023/06/08/pCAZqKO.png)
 
-<polygon>元素1 个基本属性
+`<polygon>`元素1 个基本属性
 
 - points : 点集数列。每个数字用空白、逗号、终止命令符或者换行符分隔开（成对的数字就行）。
   - 每个点必须包含 2 个数字，一个是 x 坐标，一个是 y 坐标。
@@ -788,7 +788,7 @@ preserveAspectRatio：xMinYMin表示viewBox等比例拉伸后，靠左上角显�
 
 ### 绘制文字(text)
 
-<text>元素的基本属性
+`<text>`元素的基本属性
 
 * x 和 y 属性决定了文本在用户坐标系中显示的位置。
 * text-anchor 文本流方向属性，可以有 start、middle、end 或 inherit 值，默认值 start
@@ -796,7 +796,7 @@ preserveAspectRatio：xMinYMin表示viewBox等比例拉伸后，靠左上角显�
 
 ![pCAaZGV.png](https://s1.ax1x.com/2023/06/09/pCAaZGV.png)
 
-<tspan> 元素用来标记大块文本的子部分，它必须是一个text元素或别的tspan元素的子元素。
+`<tspan>` 元素用来标记大块文本的子部分，它必须是一个text元素或别的tspan元素的子元素。
 
 * x 和 y 属性决定了文本在视口坐标系中显示的位置。
 * alignment-baseline 基线对齐属性：auto 、baseline、middle、hanging、top、bottom ... ,默认是 auto
@@ -863,7 +863,7 @@ preserveAspectRatio：xMinYMin表示viewBox等比例拉伸后，靠左上角显�
 
 ### 元素的组合(g)
 
-<g>元素是用来组合元素的容器。
+`<g>`元素是用来组合元素的容器。
 
 - 添加到g元素上的**变换会应用****到其所有的子元素**上。
 - 添加到g元素的**属性大部分会被其所有的子元素继承**。
@@ -931,9 +931,9 @@ SVG 是允许我们定义一些可复用元素的。
 < defs >元素，定义可复用元素。
 
 * **例如：定义基本图形、组合图形、渐变、滤镜、样式等等。**
-* **在< defs >元素中定义的图形元素是不会直接显示的。**
+* **在`< defs >`元素中定义的图形元素是不会直接显示的。**
 * 可在**视口任意地方用`<use>`来呈现在defs中定义的元**素。
-* <defs>元素没有专有属性，使用时**通常也不需添加任何属性**。
+* `<defs>`元素没有专有属性，使用时**通常也不需添加任何属性**。
 * defs元素参照的是用户坐标系
 
 
@@ -1462,7 +1462,7 @@ canvas滤镜效果
   * **x ， y, width, height 定义了在画布上应用此过滤器的矩形区域。x， y 默认值为 -10%（相对自身）；width ，height 默认值为 120% （相对自身**） 。
 * **< feGaussianBlur >**：该滤镜专门对输入图像进行高斯模糊
   * **stdDeviation** 熟悉指定模糊的程度
-* <feOffset> ：该滤镜可以对输入图像指定它的偏移量。
+* `<feOffset>` ：该滤镜可以对输入图像指定它的偏移量。
 
 ![pCE8ZqI.png](https://s1.ax1x.com/2023/06/09/pCE8ZqI.png)
 
@@ -1902,12 +1902,12 @@ SVG 中支持SMIL动画的元素：
 
 总结：set为元素状态的突变
 
-< set>元素提供了一种简单的方法，可以在指定的时间内设置属性的值。
+`< set>`元素提供了一种简单的方法，可以在指定的时间内设置属性的值。
 
 * set元素是最简单的 SVG 动画元素。它是在经过特定时间间隔后，将属性设置为某个值（不是过度动画效果）。因此，**图像不是连续动画，而是改变一次属性值**。
 * 它**支持所有属性类型**，包括那些无法合理插值的属性类型，例如：字符串 和 布尔值。而对于可以合理插值的属性通常首选`<animate>`元素
 
-< set>元素常用属性：
+`< set>`元素常用属性：
 
 * **attributeName**：指示将在**动画期间更改的目标元素的 CSS 属性（ property ）或属性（ attribute ）的名称**。
 
@@ -2196,7 +2196,7 @@ SVG 中支持SMIL动画的元素：
 
 < aniamteMotion >元素常用属性：
 
-* **path**：**定义运动的路径**，值和< path >元素的 d 属性一样，**也可用<mpath>的 href 引用 一个 `<path>`**。
+* **path**：**定义运动的路径**，值和`<path>`元素的d属性一样，**也可用`<mpath>`的 href 引用 一个 `<path>`**。
 * **rotate** ：动画元素自动跟随路径旋转，使元素动画方向和路径方向相同，值类型：<数字> | auto | auto-reverse; 默认值：0
 * 动画值属性： from、to 、values
 * 动画时间属性： begin、dur、fill、repeatCount

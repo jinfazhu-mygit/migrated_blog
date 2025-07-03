@@ -40,7 +40,7 @@ sticky: true
 * 当 render 被调用时，它会检查 this.props 和 this.state 的变化并返回以下类型之一：
 * **React 元素(jsx)**：
   * 例如， 会被 React 渲染为 DOM 节点， 会被 React 渲染为自定义组件
-  * **无论是 <div/> 还是 <MyComponent> 均为 React 元素**
+  * **无论是 `<div/>` 还是 `<MyComponent>` 均为 React 元素**
 * **数组或 fragments**：使得 render 方法可以返回多个元素。
 * **Portals**：可以渲染子节点到不同的 DOM 子树中
 * **字符串或数值类型**：它们在 DOM 中会被渲染为文本节点
