@@ -380,8 +380,8 @@ createSlice主要包含如下几个参数：
   * 第一次初始化时的值；
 * **reducers**：相当于之前的reducer函数
   * 对象类型，并且可以添加很多的函数；
-  * 函数类似于redux原来reducer中的一个case语句；
-  * 函数的参数：state, action: { type： ，payload:    , }
+  * 函数类似于redux原来reducer中的一个case语句;
+  * 函数的参数：state: '', action: { type: '', payload:    '' }
 
 ![pCwDfr4.png](https://s1.ax1x.com/2023/06/29/pCwDfr4.png)
 
