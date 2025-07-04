@@ -58,7 +58,45 @@ sticky: true
 - git init [project-name]：创建或在当前目录初始化一个git代码库
 - git clone url：下载一个项目和它的整个代码历史
 
-#### 日常基本操作
+git pull提示fatal: refusing to merge unrelated histories
+
+如果你确实想要合并两个独立的仓库，你可以使用 `--allow-unrelated-histories` 选项来允许这样的合并。
+
+执行以下命令：
+
+```git
+git pull origin main --allow-unrelated-histories
+```
+
+#### 日常基本操作(远程关联仓库)
+
+Git 全局设置:
+
+```
+git config --global user.name "朱金发"
+git config --global user.email "jinfazhu2000@163.com"
+```
+
+创建 git 仓库:
+
+```
+mkdir 4355
+cd 4355
+git init 
+touch README.md
+git add README.md
+git commit -m "first commit"
+git remote add origin https://gitee.com/zhu-jinfa/4355.git
+git push -u origin "master"
+```
+
+已有仓库?
+
+```
+cd existing_git_repo
+git remote add origin https://gitee.com/zhu-jinfa/4355.git
+git push -u origin "master"
+```
 
 在日常工作中，代码常用的基本操作如下：
 
@@ -126,13 +164,15 @@ sticky: true
 远程操作常见的命令：
 
 - git fetch [remote] 下载远程仓库的所有变动
-- git remote -v 显示所有远程仓库
+- git remote -v 显示所有远程仓库，确认当前 Git 仓库关联的远程仓库地址
 - git pull remote branch 拉取远程仓库的分支与本地当前分支合并
 - git fetch 获取线上最新版信息记录，不合并
 - git push remote branch 上传本地指定分支到远程仓库
 - git push -u origin master
   - 加了参数-u后，以后即可直接用git push代替git push origin master
 - git push --set-upstream origin <新分支1>  创建远程新分支1并推送当前分支代码到新分支1，同时建立与远端分支的关联关系
+- git branch -u origin/远程分支名 将当前本地分支与远程仓库的某个分支关联起来
+- git branch --set-upstream-to=origin/远程分支名 将当前本地分支与远程仓库的某个分支关联起来
 - git push [remote] --force 强行推送当前分支到远程仓库，即使有冲突
 - git push [remote] --all 推送所有分支到远程仓库
 
@@ -249,7 +289,56 @@ git pull origin master:branchtest
 
 
 
+## git跳转到commit，以该commit为基础新建分支开发
 
+### 方法 1：使用 `git checkout -b`
+
+1. **切换到你想创建分支的 commit**：
+
+   首先，你需要找到这个 commit 的哈希值。你可以使用 `git log` 来查看提交历史，并找到对应的哈希值。
+
+   ```
+   git log
+   ```
+
+   在输出的日志中找到你想要的 commit，记下它的哈希值（例如 `a1b2c3d4e5f6789012345678`）。
+
+2. **基于该 commit 创建一个新分支**：
+
+   使用 `git checkout` 命令，你可以基于一个特定的 commit 创建一个新分支。例如：
+
+   ```
+   git checkout -b new-branch-name a1b2c3d4e5f6789012345678
+   ```
+
+   这里，`new-branch-name` 是你想要创建的新分支的名字，`a1b2c3d4e5f6789012345678` 是那个特定 commit 的哈希值。
+
+### 方法 2：使用 `git switch` 和 `git branch`（推荐）
+
+从 Git 2.23 开始，`git switch` 命令被引入作为更直观的分支切换方式。如果你使用的是较新版本的 Git，可以使用以下方法：
+
+1. **切换到一个特定的 commit**：
+
+   ```
+   git switch --detach a1b2c3d4e5f6789012345678
+   ```
+
+   这会让你处于一个“分离 HEAD”状态，即不关联任何分支的状态。
+
+2. **基于当前（即特定 commit）的状态创建一个新分支**：
+
+   ```
+   git switch -c new-branch-name
+   ```
+
+   这会创建一个名为 `new-branch-name` 的新分支，并且这个新分支将从你当前所在的 commit 开始。
+
+### 注意事项
+
+- 使用“分离 HEAD”状态（即不关联任何分支）时，如果你不创建新分支，那么这个状态是临时的，并且当你切换到其他分支时，这个状态会自动消失。如果你想要长期基于这个 commit 工作，最好创建一个新分支。
+- 在使用 `git switch` 时，确保你的 Git 版本至少是 2.23 或更高。对于旧版本的 Git，仍然可以使用 `git checkout` 方法。
+
+以上就是在 Git 中从一个特定的 commit 创建新分支的步骤。
 
 
 ## git拉取项目代码
