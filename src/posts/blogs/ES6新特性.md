@@ -10,7 +10,10 @@ category:
 tag:
  - javascript
 # isShowComments: false
-publish: false
+# publish: true
+icon: pen-to-square
+star: true
+sticky: true
 ---
 
 ## ES6新特性
