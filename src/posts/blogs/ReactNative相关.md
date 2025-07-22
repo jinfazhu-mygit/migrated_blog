@@ -21,17 +21,27 @@ sticky: true
 
 ##  
 
-### 官方文档
+### 官方文档、环境配置
 
 https://www.react-native.cn/
+
+### 初始启动
+
+1. 插拔数据线
+2. adb reverse tcp:8081 tcp:8081
+3. yarn dev
+4. 手机点开app
+
+
 
 ### 重连手机
 
 1. 插拔数据线
-2. adb reverse tcp:8081 tcp:8081
+2. adb reverse tcp:8081 tcp:8081  (返回提示8081则为正确连接)
 3. yarn start
-4. r
+4. 键入r，重加载app
 5. 手机点开app
+6. 键入d(或者摇晃手机)，手机上会出现调试栏目，点击debug，跳转到浏览器`http://localhost:8081/debugger-ui/` 可查看开发打印信息
 
 
 
