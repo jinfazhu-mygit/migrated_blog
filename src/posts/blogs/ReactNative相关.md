@@ -25,6 +25,8 @@ sticky: true
 
 https://www.react-native.cn/
 
+### 开发过程如遇到截断性报错，请按照报错源提示路径，冷静细心查找报错原因，解决问题!!!
+
 ### 初始启动
 
 1. 插拔数据线
@@ -194,14 +196,18 @@ import { EventBus } from '~/util/eventBus';
 
 class TestPage extends React.PureComponent {
   componentDidMount() {
-    EventBus.on('refreshTab', (args) => {
+    // 事件监听必须通过函数名来指定，因为移除监听时需要通过名称指定的函数才能正确进行移除
+    EventBus.on('refreshTab', this.eventOnFn);
+  }
+  
+  eventOnFn(args) {
       console.log("%c Line:129 🥛 refreshTab", "color:#33a5ff", args);
       this.showCurrentTab()
-    });
   }
   
   componentWillUnmount() {
-    EventBus.off('refreshTab');
+    // EventBus.off移除时必需加上相应的监听函数
+    EventBus.off('refreshTab', this.eventOnFn);
   }
 }
 ```
@@ -247,6 +253,7 @@ const styles = StyleSheet.create({
 ```js
 <ImageBackground
   source={{ uri: 'https://s21.ax1x.com/2025/08/07/pVaP2GV.png' }}
+  // source={{ uri: 'https://s21.ax1x.com/2025/08/07/pVaP2GV.png' }}
   resizeMode="stretch"
   style={styles.resource_bg}
 >
@@ -262,6 +269,8 @@ const styles = StyleSheet.create({
 
 #### LinearGradient渐变色
 
+需熟悉LinearGradient的start end方向是如何运确定的
+
 ```js
 import LinearGradient from 'react-native-linear-gradient';
 import { Text, View } from 'react-native'
@@ -270,14 +279,25 @@ import React, { Component } from 'react'
 export default class TestPage extends Component {
   render() {
     return (
-      <LinearGradient
-        colors={['#FFE3C8', '#FFFCFC']} // 渐变颜色数组
-        start={{ x: 0, y: 0.5 }}        // 渐变起点（左侧中间）
-        end={{ x: 1, y: 0.5 }}          // 渐变终点（右侧中间）
-        style={styles.body}
-      >
-        <Text>ChildLearnSituation</Text>
-      </LinearGradient>
+          <>
+            <LinearGradient
+              colors={['#FFE3C8', '#FFFCFC']} // 渐变颜色数组
+              start={{ x: 0, y: 0.5 }}        // 渐变起点（左侧中间）
+              end={{ x: 1, y: 0.5 }}          // 渐变终点（右侧中间）
+              style={styles.body}
+            >
+              <Text>ChildLearnSituation</Text>
+            </LinearGradient>
+
+            <LinearGradient
+              colors={['white', 'rgba(255, 255, 255, 0.5)', 'transparent', 'transparent', 'rgba(255, 255, 255, 0.5)', 'white']}
+              locations={[0, 0.05, 0.2, 0.8, 0.95, 1]} // 设置渐变百分比位置colors数量需和locations的数量保持一致
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 1 }}          // 渐变终点（右侧中间）
+              style={styles.linear_gradient}
+              pointerEvents='none' // pointerEvents设置为none让触摸事件穿透LinearGradient，这样其内部节点可以接收到触摸事件。
+            ></LinearGradient>
+          </>
     )
   }
 }
@@ -612,6 +632,193 @@ const styles = StyleSheet.create({
 })
 ```
 
+#### tab切换组件(react-native-tab-view)
+
+```js
+import * as React from 'react';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+import PropTypes from 'prop-types';
+import { RootSiblingParent } from 'react-native-root-siblings';
+import { Text } from 'react-native';
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
+import { useNavigation } from '@react-navigation/native';
+
+const LazyPlaceholder = ({ route }) => (
+  <View style={styles.scene}>
+    <Text>Loading {route.title}…</Text>
+  </View>
+);
+
+class HomePage extends React.PureComponent {
+  static propTypes = {
+    itemWidth: PropTypes.number.isRequired,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showTabbar: false,
+      index: 0,
+      routes: [
+        { key: '1', title: '推荐' },
+        { key: '2', title: '个人主页' },
+      ],
+      sliderWidth: 0,
+    };
+    // this.showCurrentTab();
+  }
+
+  renderRecommendContent = () => {
+    return <Text>推荐页</Text>;
+  };
+
+  renderSelfContent = () => {
+    return <Text>个人主页</Text>;
+  }
+
+  // tabbar栏目
+  _renderTabBar = (props) => {
+    // console.log("%c Line:313 🍌 props", "color:#ea7e5c", props);
+    return <>{
+      this.state.showTabbar ? <TabBar
+        scrollEnabled={true}
+        {...props}
+        gap={0}
+        style={{
+          height: 40,
+          backgroundColor: '#fff',
+          shadowColor: '#fff',
+          borderWidth: 0,
+          elevation: 0,
+          // marginBottom: 10,
+          width: this.state.sliderWidth - 40,
+          paddingRight: 16
+        }}
+        indicatorStyle={{
+          display: 'none',
+        }}
+        tabStyle={{
+          position: 'relative',
+          padding: 0,
+          width: 'auto',
+          marginRight: 12,
+        }}
+        contentContainerStyle={{}}
+        pressColor={'#fff'}
+        onTabPress={({ route, preventDefault }) => {
+          if (route.key === 'third' || route.key === 'fourth') {
+            return false
+          } else return true
+        }}
+        renderLabel={({ route, focused, color }) => {
+          // console.log("%c Line:346 🥚 route", "color:#fca650", route);
+          return (
+            <View
+              style={{
+                height: 40,
+                position: 'relative',
+                bottom: 4,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingTop: 0,
+                paddingBottom: 0,
+                paddingLeft: 8,
+                paddingRight: 8,
+                backgroundColor: '#fff',
+                shadowColor: '#ffffff',
+              }}
+            >
+              <Text
+                style={{
+                  color: focused ? '#E42419' : '#333333',
+                  fontSize: 16,
+                  fontWeight: focused ? '800' : '400',
+                }}
+                numberOfLines={1}
+              >
+                {route.title}
+              </Text>
+              {focused && (
+                <View
+                  style={{
+                    position: 'absolute',
+                    height: 3,
+                    width: 16,
+                    // left: '50%',
+                    // marginLeft: -9,
+                    bottom: 0,
+                    borderRadius: 2,
+                    backgroundColor: '#E42419',
+                  }}
+                ></View>
+              )}
+            </View>
+          );
+        }}
+      /> : null
+    }</>;
+  };
+
+  _handleIndexChange = index => this.setState({ index });
+
+  _renderLazyPlaceholder = ({ route }) => <LazyPlaceholder route={route} />;
+
+  render() {
+    return (
+      <RootSiblingParent>
+        <View style={[styles.homePage]}>
+          {/* tab栏目 tab行 + 下方内容栏 */}
+          <View style={styles.tab_line_view}>
+            <TabView
+              lazy
+              swipeEnabled={this.state.showTabbar ? true : false}
+              navigationState={this.state}
+              renderScene={SceneMap({
+                '1': this.renderRecommendContent,
+                '2': this.renderSelfContent,
+                // first: this.renderRecommendContent,
+                // second: this.renderSelfContent,
+              }) || null}
+              renderTabBar={this._renderTabBar}
+              // 每一个tab的宽度
+              tabStyle={{ width: 'auto', minWidth: 68 }}
+              renderLazyPlaceholder={this._renderLazyPlaceholder}
+              onIndexChange={this._handleIndexChange}
+              initialLayout={{ width: Dimensions.get('window').width }}
+            />
+          </View>
+        </View>
+      </RootSiblingParent>
+    );
+  }
+}
+const withStore = (BaseComponent) => (props) => {
+  const navigation = useNavigation();
+  return <BaseComponent {...props} navigation={navigation} />;
+};
+export default withStore(HomePage);
+
+const styles = StyleSheet.create({
+  homePage: {
+    position: 'relative',
+    flex: 1,
+  },
+  tab_line_view: {
+    position: 'relative',
+    flex: 1,
+    backgroundColor: '#f5f6fa',
+    overflow: 'hidden',
+    width: Dimensions.get('window').width
+  }
+});
+
+```
+
 ### 组件内部常用命令
 
 创建组件：rnc、rncs、
@@ -650,6 +857,257 @@ const styles = StyleSheet.create({
 ```
 yarn add react-native-webview
 ```
+
+常用用法(示例使用的是webView嵌入本地html页面，允许内部页面进行滚动操作)
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cityTraffic.html</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      /* width: 100vw;
+      height: 100vh; */
+      position: relative;
+      /* margin: 0 auto; */
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .relative_contain {
+      position: relative;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="relative_contain">
+      <button id="test_post_message"></button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const btn = document.getElementById('test_post_message');
+
+      btn.addEventListener('click', () => cityClick('nc'));
+
+      function cityClick(cityName) {
+        console.log("%c Line:194 🥚 cityName", "color:#2eafb0", cityName);
+        // 传递字符串显示通信发给app WebView
+        window.postMessage(JSON.stringify({ cityName: cityName }))
+      }
+    });
+  </script>
+</body>
+
+</html>
+```
+
+CityTraffic.js
+
+注意需加入注入监听的js代码
+
+```js
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Image,
+} from 'react-native';
+import React, { Component } from 'react';
+import { openUrl, swichTabBar } from '~util/openUrl';
+import BlockHeader from './BlockHeader';
+import PropTypes from 'prop-types';
+import WebView from 'react-native-webview';
+import { _throttle } from '~/util/utilFn';
+
+const CITY_DATA = [
+  { id: 'nc', name: '南昌市', top: 95, left: 142 },
+  { id: 'jj', name: '九江市', top: 18, left: 144 },
+  { id: 'jdz', name: '景德镇市', top: 48, left: 216 },
+  { id: 'sr', name: '上饶市', top: 90, left: 251 },
+  { id: 'yt', name: '鹰潭市', top: 118, left: 210 },
+  { id: 'fz', name: '抚州市', top: 145, left: 165 },
+  { id: 'yc', name: '宜春市', top: 124, left: 64 },
+  { id: 'xy', name: '新余市', top: 160, left: 94 },
+  { id: 'px', name: '萍乡市', top: 168, left: 42 },
+  { id: 'ja', name: '吉安市', top: 216, left: 86 },
+  { id: 'gz', name: '赣州市', top: 274, left: 97 },
+  { id: 'gjxq', name: '赣江新区', top: 65, left: 152 },
+];
+
+class CityTraffic extends Component {
+  static propTypes = {
+    dataObj: PropTypes.object,
+  };
+
+  state = {
+  };
+
+  componentDidMount() {
+  }
+
+  // 去查看全部
+  toMore = () => {
+    let url = this.props.dataObj.url;
+    if (url) {
+      openUrl(this.props.dataObj);
+      return;
+    }
+    swichTabBar(4);
+  };
+
+  handleCityClick = _throttle((getedMessage) => {
+    console.log("%c Line:61 🍫 this.props.dataObj.children", "color:#93c0a4", getedMessage, this.props.dataObj.children);
+    if (getedMessage) {
+      const clickItem = CITY_DATA.find((item) => item.id === getedMessage[0].cityName)
+      if (this.props.dataObj.children && this.props.dataObj.children.length) {
+        const naviItem = this.props.dataObj.children.find((item) => item.title === clickItem.name)
+        openUrl(naviItem)
+      }
+    }
+  }, 100)
+
+  render() {
+    return (
+      <View style={{ marginTop: 10 }}>
+        <BlockHeader
+          title={this.props.dataObj.title || '城市直通车'}
+          toMore={this.toMore}
+          ifHideMore={!this.props.dataObj.url}
+        />
+
+        <View onPress={(e) => {
+          // e.preventDefault()
+        }} style={styles.container}>
+          <WebView
+            // 方法 A: 直接使用 require (iOS/Android 都适用，但 Android 需要配置)
+            source={require('./cityTraffic.html')}
+            // 允许
+            nestedScrollEnabled={true}
+            // 注入js的postmessage通信代码(必须加入否则onMessage监听不到h5页面发来的message)
+            injectedJavaScript={`(function() {
+            var lastMessageTime = 0;
+            const MESSAGE_INTERVAL = 1000
+            
+        let pathname = window.location.pathname.replace('/','')
+          // 保留原始的 window.postMessage
+          const originalPostMessage = window.postMessage;
+          // 覆盖 window.postMessage，使其可以通过 ReactNativeWebView 发送消息
+        
+          window.postMessage = function(data) {
+            // 调用原始的 postMessage
+            if(pathname.indexOf('manual') == -1 ){
+             originalPostMessage.call(window, data);
+            }
+            
+           
+            // 通过 ReactNativeWebView 发送消息
+            // window.ReactNativeWebView.postMessage(data); 
+            var currentTime = new Date().getTime();
+            if ((currentTime - lastMessageTime) >= MESSAGE_INTERVAL) {
+                // 如果超过1秒，则发送消息并更新最后一次发送消息的时间戳
+                // originalPostMessage.call(window, data);
+                window.ReactNativeWebView.postMessage(data);
+                lastMessageTime = currentTime;
+              } 
+          };
+        
+          // 监听来自 WebView 的消息并转发给 ReactNativeWebView
+          window.addEventListener('message', function(event) {
+            console.log('Message received: ', event.data);
+            window.ReactNativeWebView.postMessage(event.data);
+          });
+        
+        // 替换页面中的返回
+        var findArrowCount = 0
+        var pages = ['switch-identity','forgot-password']
+        function findArrow(){
+            setTimeout(function(){
+              findArrowCount++
+              let back = document.querySelector('[class^="back___"]')
+              let dom1 = document.querySelector('button.adm-button-primary')
+              if(dom1){
+                dom1.addEventListener('click',function(){
+                    // 仅仅选择身份页面需要返回
+                    if( pathname.indexOf('switch-identity') > -1){
+                      window.ReactNativeWebView.postMessage('goBack');
+                    }
+                })
+              }
+              if(back){
+                back.style.display = 'none'
+              }
+              if(!dom1  &&  findArrowCount < 6){
+                findArrow()
+              }
+            },500);
+        }
+        pages.indexOf(pathname) > -1 && findArrow()
+        })()
+        `}
+            // 消息监听
+            onMessage={(event) => {
+              console.log("%c Line:81 🥛 onMessage event", "color:#ed9ec7", event,);
+              this.handleCityClick(event.nativeEvent.data ? JSON.parse(event.nativeEvent.data) : '')
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    width: Dimensions.get('window').width - 22,
+    height: 415,
+    // height: (Dimensions.get('window').width - 22) * 10 / 8,
+    marginTop: 6,
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
+    borderWidth: 3,
+    borderColor: '#fff',
+    overflow: 'hidden',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  jx_bg: {
+    width: '100%',
+    height: undefined, // 高度由宽高比决定
+    position: 'relative'
+  },
+});
+
+export default CityTraffic;
+```
+
 
 [react-native-webview官网](https://github.com/react-native-webview/react-native-webview)
 
