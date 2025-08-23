@@ -44,9 +44,9 @@ Get-ChildItem -Path . -Recurse -Directory -Filter "build" | Remove-Item -Recurse
 
 ### 重连手机
 
-1. 插拔数据线
+1. 插拔数据线(**必须确认手机打开了开发者模式，且usb调试也已打开!!!**)
 2. `adb reverse tcp:8081 tcp:8081`  (返回提示8081则为正确连接)
-3. `adb devices`可查看当前可用设备
+3. `adb devices`可查看当前可用设备(如以上两个命令无效，请再次确认手机打开了开发者模式，且usb调试也已打开)
 4. `yarn start` (`yarn start --reset-cache`可清除 Metro 缓存)
 5. 手机点开app
 6. 键入r，重加载app(已连接的情况下，可能需要多点击几次reload app或r，手机重进app)
@@ -858,7 +858,11 @@ const styles = StyleSheet.create({
 yarn add react-native-webview
 ```
 
-常用用法(示例使用的是webView嵌入本地html页面，允许内部页面进行滚动操作)
+常用用法(**示例使用的是webView嵌入本地html页面**，允许内部页面进行滚动操作)
+
+webView嵌入本地html页面打生产包无法正确显示html文件需，考虑将html文件放到**android/app/src/main/assets/**目录下，引用时区分好环境
+
+cityTraffic.html
 
 ```html
 <!DOCTYPE html>
@@ -1005,7 +1009,9 @@ class CityTraffic extends Component {
         }} style={styles.container}>
           <WebView
             // 方法 A: 直接使用 require (iOS/Android 都适用，但 Android 需要配置)
-            source={require('./cityTraffic.html')}
+            // 环境区分
+            // source={__DEV__ ? require('./cityTraffic.html') : { uri: 'file:///android_asset/cityTraffic.html' }}
+            source={__DEV__ ? require('~/../android/app/src/main/assets/cityTraffic.html') : { uri: 'file:///android_asset/cityTraffic.html' }}
             // 允许
             nestedScrollEnabled={true}
             // 注入js的postmessage通信代码(必须加入否则onMessage监听不到h5页面发来的message)
@@ -1214,4 +1220,8 @@ this.props.route.params.KEY
 
 包含Ionicons、FontAwesome、AntDesign图标库
 
+### 调试解决方案
 
+#### 文件资源引用相关问题
+
+android中**需要被直接引用的资源文件**(不要太大，过大的话建议放入后端资源服务器，以文件链接方式引入)，放到**android/app/src/main/assets/**目录下，**生产包打包完成后可将.apk改成.zip后缀解压**，然后结合解压的文件和具体的代码进行排查
