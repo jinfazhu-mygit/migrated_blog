@@ -50,7 +50,7 @@ Get-ChildItem -Path . -Recurse -Directory -Filter "build" | Remove-Item -Recurse
 4. `yarn start` (`yarn start --reset-cache`可清除 Metro 缓存)
 5. 手机点开app
 6. 键入r，重加载app(已连接的情况下，可能需要多点击几次reload app或r，手机重进app)
-7. 键入d(或者摇晃手机)，手机上会出现调试栏目，点击debug，跳转到浏览器`http://localhost:8081/debugger-ui/` 可查看开发打印信息(或**关闭浏览器自动默认调试页**：http://localhost:8081/debugger-ui/，**运行React Native Debugger调试工具**，然后重跑重开应用，React Native Debugger调试工具内执行Edit -> Redo)
+7. 键入d(或者摇晃手机)，手机上会出现调试栏目，点击debug，跳转到浏览器`http://localhost:8081/debugger-ui/` 可查看开发打印信息(或**关闭浏览器自动默认调试页**：http://localhost:8081/debugger-ui/， **运行React Native Debugger调试工具**，然后重跑重开应用，React Native Debugger调试工具内执行Edit -> Redo)
 
 
 ### 真机远程(借用抓包工具filddler)
@@ -71,7 +71,7 @@ Get-ChildItem -Path . -Recurse -Directory -Filter "build" | Remove-Item -Recurse
 
 #### 常见问题
 
-当React Native Debugger提示 **Another debugger is already connected** 时，先关闭浏览器自动默认调试页：http://localhost:8081/debugger-ui/，然后重跑重开应用，React Native Debugger内执行Edit -> Redo
+当React Native Debugger提示 **Another debugger is already connected** 时，先关闭浏览器自动默认调试页：http://localhost:8081/debugger-ui/， 然后重跑重开应用，React Native Debugger内执行Edit -> Redo
 
 ![](https://s21.ax1x.com/2025/07/29/pVY5G4K.png)
 
@@ -860,7 +860,7 @@ yarn add react-native-webview
 
 常用用法(**示例使用的是webView嵌入本地html页面**，允许内部页面进行滚动操作)
 
-webView嵌入本地html页面打生产包无法正确显示html文件需，考虑将html文件放到**android/app/src/main/assets/**目录下，引用时区分好环境
+webView嵌入本地html页面打生产包无法正确显示html文件需，考虑将html文件放到**android/app/src/main/assets/** 目录下，引用时区分好环境
 
 cityTraffic.html
 
@@ -1224,4 +1224,4 @@ this.props.route.params.KEY
 
 #### 文件资源引用相关问题
 
-android中**需要被直接引用的资源文件**(不要太大，过大的话建议放入后端资源服务器，以文件链接方式引入)，放到**android/app/src/main/assets/**目录下，**生产包打包完成后可将.apk改成.zip后缀解压**，然后结合解压的文件和具体的代码进行排查
+android中**需要被直接引用的资源文件**(不要太大，过大的话建议放入后端资源服务器，以文件链接方式引入)，放到 **android/app/src/main/assets/** 目录下，**生产包打包完成后可将.apk改成.zip后缀解压**，然后结合解压的文件和具体的代码进行排查
