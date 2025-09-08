@@ -28,6 +28,7 @@ sticky: true
 
 
 
+
 # ECharts5
 
 丰富的图表类型
@@ -2420,6 +2421,216 @@ function autoToolTip() {
 ```
 
 # 大屏适配
+
+### 大屏scss/less方案
+
+webpack.base.js
+
+```js
+module.exports = {
+  entry: path.join(__dirname, '../src/index.tsx'),
+  output: {
+    filename: 'js/[name].[chunkhash:8].js',
+    path: path.join(__dirname, '../dist'),
+    clean: true,
+    publicPath: '/'
+    // process.env.NODE_ENV === 'development' ? '/' : './'
+  },
+  cache: {
+    type: 'filesystem' // 使用文件缓存
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        use: ['thread-loader', 'babel-loader'],
+        include: [path.resolve(__dirname, '../src')]
+      },
+      {
+        test: /\.css$/,
+        include: [path.resolve(__dirname, '../src')],
+        use: [
+          isDev
+            ? 'style-loader'
+            : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
+          cssLoader(),
+          'postcss-loader'
+        ]
+      },
+      {
+        test: /\.less$/,
+        include: [path.resolve(__dirname, '../src')],
+        use: [
+          isDev
+            ? 'style-loader'
+            : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
+          cssLoader(),
+          'postcss-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              additionalData:
+                '@import "~@/utils.less";'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.scss$/,
+        include: [path.resolve(__dirname, '../src')],
+        use: [
+          isDev
+            ? 'style-loader'
+            : MiniCssExtractPlugin.loader, // 开发环境使用style-looader,打包模式抽离css
+          cssLoader(),
+          'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              additionalData:
+                '@import "@/default.module.scss";'
+            }
+          }
+        ]
+      },
+    ]
+  },
+  resolve: {
+    extensions: ['.jsx', '.js', '.tsx', '.ts'],
+    alias: {
+      '@': path.join(__dirname, '../src')
+    },
+    modules: [path.resolve(__dirname, '../node_modules')]
+  },
+  plugins: [
+    new HtmlWepackPlugin({
+      title: 'xxx',
+      template: path.resolve(
+        __dirname,
+        '../public/index.html'
+      ),
+      inject: true
+    }),
+    new webpack.DefinePlugin({
+      process: {
+        env: {
+          BASE_ENV: JSON.stringify(process.env.BASE_ENV),
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+          BASE_NAME: JSON.stringify(process.env.BASE_NAME)
+        }
+      }
+    })
+  ]
+};
+```
+
+default.module.scss
+
+```scss
+$baseWidth: 1920;
+$baseHeight: 1080;
+
+$fontBlue: #006cff;
+$blue: #2366eb;
+$grey: #666666;
+$white: #ffffff;
+
+$defaultBackGroundColor: #ffffff;
+
+@function vw($width) {
+  @return calc(($width * 100 * 1vw) / $baseWidth);
+}
+
+@function vh($height) {
+  @return calc(($height * 100 * 1vh) / $baseHeight);
+}
+
+@function fontSize($height) {
+  @return calc(($height * 100 * 1vh) / $baseHeight);
+}
+
+@mixin textOverFlow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin columnCenter {
+  display: flex;
+  align-items: center;
+}
+
+@mixin defaultRadius {
+  border-radius: vw(4);
+}
+
+@mixin defaultShadow {
+  box-shadow: 0 0 vw(4) vw(4) rgba(0, 0, 0, 0.05);
+}
+
+@mixin pointer {
+  cursor: pointer;
+}
+```
+
+utils.less
+
+```less
+@charset "utf-8";
+
+// 默认设计稿的宽度
+@designWidth: 1920;
+
+// 默认设计稿的高度
+@designHeight: 1080;
+
+// width、margin左右、padding左右、用
+.useDynamicW(@name, @width) {
+  @{name}: calc((@width * 100 * 1vw) / @designWidth);
+}
+
+// height、line-height、margin上下、padding上下、font-size用
+.useDynamicH(@name, @height) {
+  @{name}: calc((@height * 100 * 1vh) / @designHeight);
+}
+
+// width: calc(100% - vw(200));
+.useCalcWidth(@width) {
+  width: calc(100% - (@width * 100 * 1vw) / @designWidth)
+}
+
+// height: calc(100% - vh(200));
+.useCalcHeight(@height) {
+  height: calc(100% - (@height * 100 * 1vh) / @designHeight)
+}
+
+// 全自动 name 占比 减数 left: calc(50% - vw(65));
+.useCalcDynamicW(@name, @propertion, @arg) {
+  @{name}: calc(@propertion - (@arg * 100 * 1vw) / @designWidth)
+}
+
+.useCalcDynamicH(@name, @propertion, @arg) {
+  @{name}: calc(@propertion - (@arg * 100 * 1vh) / @designHeight)
+}
+
+.px2vw(@name, @px) {
+  @{name}: (@px / @designWidth) * 100vw;
+}
+
+.px2vh(@name, @px) {
+  @{name}: (@px / @designHeight) * 100vh;
+}
+
+.px2font(@px) {
+  font-size: (@px / @designWidth) * 100vw;
+}
+```
 
 ### 大屏适配方案1 – rem + font-size(lib_flexible.js)
 
