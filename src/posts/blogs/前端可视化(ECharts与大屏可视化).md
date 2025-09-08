@@ -2420,7 +2420,7 @@ function autoToolTip() {
 </html>
 ```
 
-# 大屏适配
+## 大屏适配
 
 ### 大屏scss/less方案
 
