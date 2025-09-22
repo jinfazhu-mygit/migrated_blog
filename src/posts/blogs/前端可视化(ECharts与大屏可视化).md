@@ -29,6 +29,7 @@ sticky: true
 
 
 
+
 # ECharts5
 
 丰富的图表类型
@@ -144,6 +145,216 @@ const TeacherAgeDistribute: FC<TeacherAgeDistributeProps> = (props: any) => {
 }
 
 export default TeacherAgeDistribute
+```
+
+## 通用使用组件
+
+src/components/echartsDom/index.tsx
+
+```jsx
+import {
+  useEffect,
+  useMemo,
+  useState,
+  ForwardRefRenderFunction,
+  useImperativeHandle,
+  forwardRef,
+  Ref
+} from 'react';
+// @ts-ignore
+import { uniqueId } from 'loadsh';
+import * as echarts from 'echarts/core';
+// 引入三款基础样式
+import {
+  BarChart,
+  LineChart,
+  PieChart
+} from 'echarts/charts';
+// 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  LegendComponent
+} from 'echarts/components';
+// 标签自动布局、全局过渡动画等特性
+import {
+  LabelLayout,
+  UniversalTransition
+} from 'echarts/features';
+// 引入渲染器
+import { CanvasRenderer } from 'echarts/renderers';
+import { EchartsDomProps } from './data';
+
+import styles from './index.module.scss';
+
+// 基础图表样式
+const baseExcelStyle = [BarChart, LineChart, PieChart];
+
+// 基础组建数组
+const baseList = [
+  ...baseExcelStyle,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  LegendComponent,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer
+];
+
+const EchartsDom: ForwardRefRenderFunction<
+  Ref<{ current: echarts.ECharts | null }>,
+  EchartsDomProps
+> = (props, ref) => {
+  const {
+    width = '200px',
+    height = '100px',
+    options,
+    // 需要使用的 echarts 单个组件或者组件组成的数组
+    echartsComList = [],
+    onClick,
+    boxStyle,
+    echartsClick,
+    echartsMouseover
+  } = props;
+
+  const [echartsObj, setEchartsObj] = useState<any>(null);
+
+  // 通过 ref 暴露给父组件
+  useImperativeHandle(ref, () => {
+    return echartsObj;
+  }, [echartsObj]);
+
+  let id = useMemo(() => {
+    return uniqueId('echarts_');
+  }, []);
+
+  useEffect(() => {
+    initEachartsUse();
+  }, [echartsComList]);
+
+  useEffect(() => {
+    let echartsObj = echarts.getInstanceByDom(
+      document.getElementById(id) as HTMLElement
+    );
+    echartsObj?.clear();
+    if (echartsObj == null) {
+      echartsObj = echarts.init(
+        document.getElementById(id) as HTMLElement
+      );
+    }
+    // 使用 notMerge: true 确保配置被完全替换，包括函数
+    options && echartsObj.setOption(options, true);
+    // @ts-ignore
+    echartsObj.on('click', echartsClick);
+    // @ts-ignore
+    echartsObj.on('mouseover', echartsMouseover);
+
+    setEchartsObj(echartsObj);
+    return () => {
+      echartsObj.off('click', echartsClick);
+      echartsObj.off('mouseover', echartsMouseover);
+    };
+  }, [options]);
+
+  // 初始化 eacharts
+  const initEachartsUse = () => {
+    let comList = [];
+    if (Array.isArray(echarts)) {
+      comList = [...echartsComList, ...baseList];
+    } else {
+      comList = [echartsComList, ...baseList];
+    }
+    echarts.use(comList);
+  };
+
+  return (
+    <div
+      style={{
+        width: `${width}`,
+        height: `${height}`,
+        ...boxStyle
+      }}
+      onClick={onClick}
+      className={styles['echarts-dom-box']}
+    >
+      <div id={id} className={styles['echarts-content']} />
+    </div>
+  );
+};
+
+export default forwardRef<
+  Ref<{ current: echarts.ECharts | null }>,
+  EchartsDomProps
+>(EchartsDom);
+
+```
+
+```scss
+.echarts-dom-box {
+  padding: 5px;
+  box-sizing: border-box;
+  z-index: 30;
+
+  .echarts-content {
+    width: 100%;
+    height: 100%;
+  }
+}
+```
+
+使用
+
+```jsx
+import React, { FC } from 'react';
+import EchartsDom from '@/components/echartsDom';
+
+type IndexProps = {
+
+}
+
+const Index: FC<IndexProps> = (props: any) => {
+  const [chartOptionsState, setChartOptionsState] = useState(chartOptions);
+
+  useEffect(() => {
+    chartDataChange([
+      { name: '2021', value: 11001 },
+      { name: '2022', value: 12003 },
+      { name: '2023', value: 13003 },
+      { name: '2024', value: 15003 },
+      { name: '2025', value: 16003 },
+    ])
+    return () => {
+    }
+  }, []);
+  
+  const chartDataChange = (data: any[]) => {
+    // 使用lodash的cloneDeep因为JSON.stringify 会丢失函数
+    // const newchartOptionsState = JSON.parse(JSON.stringify(chartOptionsState))
+    const newchartOptionsState = cloneDeep(chartOptionsState)
+    newchartOptionsState.xAxis.data = data?.length ? data.map((item: any, index: number) => {
+      return item.name
+    }) : []
+    newchartOptionsState.series[0].data = data?.length ? data.map((item: any, index: number) => {
+      return item.value
+    }) : []
+
+    setChartOptionsState(newchartOptionsState)
+  }
+  
+  return (
+    <div style={{ width: '500px', height: '500px' }}>
+      <EchartsDom width={'100%'} height={'100%'} options={chartOptionsState}></EchartsDom>
+    </div>
+  )
+}
+
+export default Index
 ```
 
 ## options配置项
