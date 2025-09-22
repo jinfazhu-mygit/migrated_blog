@@ -550,100 +550,59 @@ const StandardExamModal = (props) => {
 export default ProviderCom(inject('ModalMobx', 'Dict')(observer(StandardExamModal)), { ModalMobx, Dict })
 ```
 
-## mobx6
-
-### 添加观测的几种方式
+## mobx添加观测的几种方式
 
 ### makeAutoObservable观测
 
 ```js
-import axios from "axios"
-import { makeAutoObservable, runInAction } from "mobx"
+import { toJS, makeAutoObservable } from 'mobx';
+import request from '@/service/request';
 
-// 1.对应用状态进行建模。
-// calss也可直接导出作为timer实例的类型来使用!!!
-export class Timer {
-  secondsPassed = 0
+export class IndexMobx {
+  userUnitType: string = '';
 
   constructor() {
-    // 2.开启观测
-    makeAutoObservable(this)
+    makeAutoObservable(this);
   }
 
-  increase() {
-    this.secondsPassed += 1
-  }
+  setInfo = (info: Record<string, any>) => {
+    Object.keys(info).forEach(key => {
+      this[key as keyof typeof this] = info[key];
+    });
+  };
 
-  reset() {
-    this.secondsPassed = 0
-  }
+  getAuthority = async () => {
+    const res: any = await request({
+      url: '/support/auth',
+      method: 'POST'
+    });
+  };
 
-  // 异步
-  async decrement() {
-    // 1.
-    axios.get('xxx').then((res) => {
-      runInAction(() => {
-        this.secondsPassed -= res
-      })
-    })
-
-    // 2.
-    const res = await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // 减的数为10
-        resolve(10)
-      }, 1000);
-    })
-    // 直接这样会报警告
-    // this.secondsPassed -= res
-    runInAction(() => {
-      this.secondsPassed -= res
-    })
-  }
+  resetMobx = () => {
+    this.setInfo({
+      userUnitType: ''
+    });
+  };
 }
 
-export default new Timer()
+export default new IndexMobx();
 ```
 
-### observer()使用-熟悉传值props法
-
-```js
-// 使用
-// 2.构建一个使用 observable 状态的“用户界面”。
-import { observer } from "mobx-react";
-import { myTimer，Timer } from './Timer'
-
-const TimerView = memo(observer(({ timer }: { timer: Timer }) => (
-  <>
-    <div>当前秒数：{timer.secondsPassed}</div>
-    <button onClick={() => timer.reset()}>重置</button>
-  </>
-)))
-
-export default TimerView
-
-// 1.添加
-ReactDOM.render(<TimerView timer={myTimer} />, document.body)
-```
-
-### useLocalObservable实例使用法
+### observer+useLocalObservable实例使用法
 
 ```js
 import { observer, useLocalObservable } from "mobx-react";
-// 1.直接引入实例
-import TimeMobx from './Timer';
+import IndexMobx from './mobx';
 
-const TimerView = observer(() => {
-  // 2.useLocalObservable直接使用mobx类导出的实例
-  const timeStore = useLocalObservable(() => TimeMobx)
+const IndexView = observer(() => {
+  const vm = useLocalObservable(() => IndexMobx)
 
-  return (<>
-    <div>当前秒数：{timeStore.secondsPassed}</div>
-    <button onClick={() => timeStore.reset()}>重置</button>
-  </>)
+  return (<div>
+    {vm.userUnitType}
+  </div>)
 })
 
-export default TimerView
+export default observer(IndexView)
 ```
 
 
