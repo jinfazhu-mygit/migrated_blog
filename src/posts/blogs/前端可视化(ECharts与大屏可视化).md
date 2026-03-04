@@ -30,6 +30,7 @@ sticky: true
 
 
 
+
 # ECharts5
 
 丰富的图表类型
@@ -308,7 +309,206 @@ export default forwardRef<
 }
 ```
 
-使用
+## 组件使用
+
+**一般图表数据赋值流程**：
+
+1. xAxis.data的字符串数组，横坐标确定
+2. 各个series[index]的data数据，各块数据的展示
+
+chartOptions.ts
+
+```ts
+export const getChartOption = (data: any) => {
+  const xAxisName = data?.length
+    ? data.map((item: any, index: number) => {
+        return item.name;
+      })
+    : [];
+
+  const seriesData = data?.length
+    ? data.map((item: any, index: number) => {
+        return item.value;
+      })
+    : [];
+
+  return {
+    grid: {
+      left: 0,
+      top: '12%',
+      right: '1%',
+      bottom: '2%',
+      containLabel: true
+    },
+    tooltip: {
+      show: true,
+      // 使用了 trigger ，一般也结合 axisPointer
+      trigger: 'axis',
+      backgroundColor: 'rgba(0, 76, 172, 0.90)',
+      borderColor: 'rgba(32, 121, 229, 1)',
+      borderWidth: 1,
+      textStyle: {
+        color: '#fff'
+      },
+      axisPointer: {
+        type: 'line', // // 柱状图鼠标悬浮透明背景 (默认是竖线 line)  (横线 + 竖线 cross)  (横线 + 竖线 shadow) (cross)
+        lineStyle: {
+          color: 'rgba(201, 205, 212, 1)'
+        }
+      }
+    },
+    xAxis: {
+      // show: false,
+      type: 'category',
+      data: xAxisName,
+      axisLabel: {
+        color: 'rgba(255, 255, 255, 0.70)'
+      },
+      axisLine: {
+        show: false
+      },
+      axisTick: { show: false }
+    },
+    yAxis: {
+      type: 'value',
+      scale: true,
+      minInterval: 1,
+      splitNumber: 3,
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: 'rgba(130, 144, 157, 0.18)',
+          type: 'dashed'
+        }
+      },
+      axisLabel: {
+        color: 'rgba(255, 255, 255, 0.70)'
+        // formatter: function (value: number) {
+        //   if (value < 10000) {
+        //     return value
+        //   } else {
+        //     return value / 10000 + '万'
+        //   }
+        // }
+      }
+    },
+    series: [
+      {
+        name: '学校数',
+        data: seriesData,
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 10,
+        lineStyle: {
+          color: 'rgba(55, 182, 255, 1)',
+          width: 2
+        },
+        itemStyle: {
+          // width: 10,
+          borderWidth: 2,
+          borderColor: '#fff',
+          color: 'rgba(55, 182, 255, 1)'
+        },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              {
+                offset: 0,
+                color: 'rgba(55, 182, 255, 0.30)' // 0% 处的颜色
+              },
+              {
+                offset: 1,
+                color: 'rgba(55, 182, 255, 0)' // 100% 处的颜色
+              }
+            ],
+            global: false // 缺省为 false
+          }
+        }
+      }
+    ]
+  };
+};
+```
+
+mobx/index.ts
+
+```ts
+import {
+  observable,
+  makeObservable,
+  action,
+  toJS,
+  makeAutoObservable
+} from 'mobx';
+import request from '@/service/request';
+import { Decrypt } from '@/utils/crypto';
+import { stringify } from 'qs';
+
+export class IndexMobx {
+  chartData: any[] = [
+    {
+      name: '南昌市',
+      value: 23131,
+    },
+    {
+      name: '九江市',
+      value: 24131,
+    },
+    {
+      name: '景德镇市',
+      value: 23131,
+    }
+  ];
+
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  setInfo = (info: Record<string, any>) => {
+    Object.keys(info).forEach(key => {
+      this[key as keyof typeof this] = info[key];
+    });
+  };
+  
+  getChartData = async (data: Object) => {
+    const res: any = await request({
+      url: ``,
+      method: 'POST',
+      data: {
+        ...data
+      }
+    });
+    if (res.data?.length) {
+      const list = res.data.map(
+        (item: any, index: number) => {
+          return {
+            name: item.year,
+            value: item.schoolCnt
+          };
+        }
+      );
+      this.setInfo({ chartData: list });
+    } else {
+      this.setInfo({
+        chartData: []
+      });
+    }
+  };
+
+  resetMobx = () => {
+    this.setInfo({});
+  };
+}
+
+export default new IndexMobx();
+```
+
+index.tsx
 
 ```jsx
 import React, { FC } from 'react';
@@ -319,37 +519,27 @@ type IndexProps = {
 }
 
 const Index: FC<IndexProps> = (props: any) => {
-  const [chartOptionsState, setChartOptionsState] = useState(chartOptions);
-
+  const [chartOptionsState, setChartOptionsState] = useState(getChartOption(vm.chartData));
+  
   useEffect(() => {
-    chartDataChange([
-      { name: '2021', value: 11001 },
-      { name: '2022', value: 12003 },
-      { name: '2023', value: 13003 },
-      { name: '2024', value: 15003 },
-      { name: '2025', value: 16003 },
-    ])
-    return () => {
-    }
+    vm.getChartData({})
   }, []);
   
-  const chartDataChange = (data: any[]) => {
-    // 使用lodash的cloneDeep因为JSON.stringify 会丢失函数
-    // const newchartOptionsState = JSON.parse(JSON.stringify(chartOptionsState))
-    const newchartOptionsState = cloneDeep(chartOptionsState)
-    newchartOptionsState.xAxis.data = data?.length ? data.map((item: any, index: number) => {
-      return item.name
-    }) : []
-    newchartOptionsState.series[0].data = data?.length ? data.map((item: any, index: number) => {
-      return item.value
-    }) : []
-
-    setChartOptionsState(newchartOptionsState)
-  }
+  useEffect(() => {
+    if (vm.chartData.length) {
+      setChartOptionsState(getChartOption(vm.chartData))
+    }
+  }, [vm.chartData]);
   
   return (
     <div style={{ width: '500px', height: '500px' }}>
-      <EchartsDom width={'100%'} height={'100%'} options={chartOptionsState}></EchartsDom>
+      
+      {/* <EchartsDom width={'100%'} height={'100%'} options={getChartOption(vm.schoolCountTrend)}></EchartsDom> */} 
+        <EchartsDom
+          width={'100%'}
+          height={'100%'}
+          {/* 注意不要直接使用options={getChartOption(vm.chartData)}，否则会出现当界面中有其他数据变化时，会触发图表的不必要重新加载比如动画，通过useState控制图表options的配置项，自动优化展示 */}
+          options={chartOptionsState}/>
     </div>
   )
 }
@@ -399,8 +589,23 @@ xAxis: {
 
   axisLabel: { // 坐标轴刻度标签的相关设置。
     show: true,
+    // interval: 1, // label间隔数
     color: "green",
     fontSize: 16,
+    formatter: function (value: any) {
+      // 每5个字符换行
+      return value.split('').reduce(function (
+        accumulator: any,
+        current: any,
+        index: any
+      ) {
+        return (
+          accumulator +
+          (index !== 0 && index % 5 === 0 ? '\n' : '') +
+          current
+        );
+      }, '');
+    }
   },
 
   axisTick: {  // 坐标轴刻度相关设置。
@@ -989,6 +1194,30 @@ tooltip: {
 }
 ```
 
+#### tooltip.formatter(自定义tooltip)
+
+```ts
+  tooltip: {
+    trigger: 'item',
+    backgroundColor: 'rgba(0, 76, 172, 0.90)',
+    borderColor: 'rgba(32, 121, 229, 1)',
+    borderWidth: 1,
+    textStyle: {
+      color: '#fff'
+    },
+    padding: 12,
+    formatter: function (params: any) {
+      console.log("%c Line:203 🍿 params", "color:#2eafb0", params);
+      // params 可能是对象或数组，根据图表类型调整
+      return `<div>
+        <div style="display: flex;justify-content: flex-start;align-items: center;gap: 6px;"><div style="width: 10px;height: 10px;border-radius: 5px;background-color: ${params.color}"></div><div>${params.seriesName}</div></div>
+        <div style="padding-top: 5px;">${params.name}：<span style="font-weight: bold;">${params.value}人</span></div>
+        <div>占比：<span style="font-weight: bold;">${params.percent}%</span></div>
+      </div>`;
+    },
+  },
+```
+
 ### Color的渐变色
 
 对象配置方式（ 推荐 ）
@@ -1065,6 +1294,394 @@ series: [
     ]
   }
 ]
+```
+
+### 横坐标全显示(旋转，手动换行)
+
+```ts
+    xAxis: {
+      type: 'category',
+      data: ['长且多的标签长且多的标签', '长且多的标签长且多的标签', '长且多的标签长且多的标签', '长且多的标签长且多的标签', '长且多的标签长且多的标签', '长且多的标签长且多的标签', '长且多的标签长且多的标签','长且多的标签长且多的标签','长且多的标签长且多的标签','长且多的标签长且多的标签','长且多的标签长且多的标签'],
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        // rotate: 26, // 设置旋转展示
+        interval: 0,
+        textStyle: {
+          color: '#DEE9FF'
+        },
+        formatter: function (value: any) {
+          // 每5个字符换行
+          return value.split('').reduce(function (
+            accumulator: any,
+            current: any,
+            index: any
+          ) {
+            return (
+              accumulator +
+              (index !== 0 && index % 5 === 0 ? '\n' : '') +
+              current
+            );
+          }, '');
+        }
+      },
+    },
+```
+
+### 图表添加图片展示
+
+graphic
+
+```ts
+    graphic: {
+      type: 'image',
+      id: 'centerImage',
+      left: '10%', // 与饼图中心对齐
+      top: '50%',
+      style: {
+        image: 'https://z1.ax1x.com/2023/11/09/pi31xSS.png',
+        width: 80,
+        height: 80
+      },
+      position: [0, 0] // 向左向上移动图片宽度和高度的一半，使图片中心与饼图中心重合
+    },
+```
+
+graphic添加图表的其中图片居中展示
+
+```ts
+const pieCenterX = vwNum(475) * 0.3; // 30% 位置
+  const pieCenterY = vhNum(248) * 0.5; // 50% 位置
+  const imgWidth = vwNum(140);
+  const imgHeight = vhNum(140);    
+
+    graphic: {
+      type: 'image',
+      id: 'centerImage',
+      left: pieCenterX - imgWidth / 2, // 与饼图中心对齐
+      top: pieCenterY - imgHeight / 2,
+      style: {
+        image:
+          'https://s21.ax1x.com/2025/10/11/pVH7z6O.png',
+        width: imgWidth,
+        height: imgHeight
+      }
+    },
+    series: [
+      {
+        name: '品类占比',
+        type: 'pie',
+        center: ['30%', '50%'],
+        radius: ['65%', '80%'],
+        avoidLabelOverlap: false,
+        label: {
+          show: false
+        },
+        labelLine: {
+          show: false
+        },
+        data: seriesData
+      }
+    ]
+```
+
+
+
+series内部添加图片
+
+```ts
+series: [
+      {
+        name: '品类占比',
+        type: 'pie',
+        center: ['30%', '50%'],
+        radius: ['60%', '80%'],
+        avoidLabelOverlap: false,
+        // label: {
+        //   show: false
+        // },
+        labelLine: {
+          show: false
+        },
+        label: {
+          show: true,
+          position: 'center',
+          formatter: [
+            '{a|}', // 占位符
+            '{b|}', // 占位符
+            '{img|}'
+          ].join('\n'),
+          rich: {
+            a: {
+              height: 0
+            },
+            b: {
+              height: 0
+            },
+            img: {
+              backgroundColor: {
+                image:
+                  'https://z1.ax1x.com/2023/11/09/pi31xSS.png'
+              },
+              height: 80,
+              width: 80
+            }
+          }
+        },
+        data: seriesData
+      }
+    ]
+```
+
+### 文本居于图表中间居中
+
+#### 方案一(title.text)
+
+```ts
+  // 计算总数用于百分比显示
+  const total =
+    data?.reduce(
+      (sum: number, cur: any) => sum + parseInt(cur.value),
+      0
+    ) || 0;
+
+  // totalLeftWidth用于计算总数显示文本的位置不同长度的文本左侧距离不一样
+  const totalString = total + '';
+  const vwValues = [
+    9.5, 16, 15, 14, 11.4, 9.5, 7.7, 7, 3.5
+  ];
+  const totalLeftPercent = vwNum(
+    vwValues[totalString.length] ?? 40
+  );
+
+title: [
+      {
+        text: new Intl.NumberFormat('zh-CN').format(total),
+        top: '35%',
+        // left: `calc('9.5%' + totalLeftWidth)`,
+        left: `${totalLeftPercent}`, // 尽量用数值，用百分比在不同分辨率下偏差较大
+        align: 'center',
+        textStyle: {
+          position: 'relative',
+          fontSize: fontSize(20),
+          fontFamily: 'DIN-Bold, DIN',
+          fontWeight: 'bold',
+          color: 'rgba(0, 93, 255, 1)', // 在这里设置颜色
+          lineHeight: vhNum(20)
+        }
+      },
+      {
+        text: '供应商总数',
+        top: '49%',
+        left: '9.3%',
+        textStyle: {
+          fontSize: fontSize(14),
+          fontFamily:
+            'Microsoft YaHei-Regular, Microsoft YaHei',
+          fontWeight: 'bold',
+          color: 'rgba(54, 64, 79, 1)', // 在这里设置颜色
+          lineHeight: vhNum(20)
+        }
+      }
+    ],
+```
+
+#### 方案二(series.label)(推荐)
+
+```js
+    series: [
+      // 小学圆环图
+      {
+        name: '小学',
+        type: 'pie',
+        padAngle: 1,
+        radius: ['50%', '65%'],
+        center: ['28%', '50%'],
+        avoidLabelOverlap: true,
+        itemStyle: {
+          borderRadius: 0,
+          borderWidth: 0, // 去掉边框避免干扰
+          shadowBlur: 5,
+          shadowColor: 'rgba(0, 0, 0, 0.1)'
+        },
+        label: {
+          show: true,
+          position: 'outside',
+          formatter: function (params: any) {
+            // 当值很小时不显示标签
+            if (params.percent < 5) return '';
+
+            if (params.name === '留守儿童') {
+              return `{name|${params.name}}\n{value|${primaryLeftBehindPercent}}`;
+            } else {
+              return `{name|${params.name}}\n{value|${primaryNonLeftBehindPercent}}`;
+            }
+          },
+          alignTo: 'none', // 改为none，避免自动对齐
+          margin: 8, // 增加边距
+          lineHeight: 18,
+          fontSize: 12,
+          fontWeight: 'normal',
+          rich: {
+            name: {
+              color: '#DEE9FF',
+              fontSize: 11,
+              lineHeight: 16,
+              padding: [2, 0]
+            },
+            value: {
+              color: function () {
+                // 直接返回颜色，不依赖params
+                return '#FFFFFF';
+              },
+              fontSize: 12,
+              lineHeight: 18,
+              fontWeight: 'bold',
+              padding: [0, 0, 2, 0]
+            }
+          }
+        },
+        labelLine: {
+          show: true,
+          length: 4, // 第一段引导线长度
+          length2: 4, // 第二段引导线长度
+          smooth: false, // 改为直线更清晰
+          minTurnAngle: 0, // 最小转折角度
+          lineStyle: {
+            width: 1,
+            color: 'rgba(255, 255, 255, 0.5)',
+            type: 'solid'
+          },
+          showAbove: true
+        },
+        emphasis: {
+          scale: false, // 关闭放大效果避免干扰
+          label: {
+            show: true,
+            fontSize: 13,
+            color: '#FFFFFF'
+          },
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.3)'
+          }
+        },
+        data: [
+          {
+            value: primaryLeftBehind,
+            name: '留守儿童',
+            itemStyle: {
+              color: '#39CA8E'
+            }
+          },
+          {
+            value: primaryNonLeftBehind,
+            name: '非留守儿童',
+            itemStyle: {
+              color: '#0085FF'
+            }
+          }
+        ]
+      },
+      // 添加series来显示圆环中间的文字
+      {
+        type: 'pie',
+        radius: ['0%', '45%'],
+        center: ['28%', '50%'], // center保持一致
+        label: {
+          show: true,
+          position: 'center', // 居中
+          formatter: function () {
+            return `{title|农村小学}\n{title|在校生总数}\n{value|${primaryTotal.toLocaleString()}}`;
+          },
+          rich: {
+            title: {
+              color: '#DEE9FF',
+              fontSize: 14,
+              fontWeight: 'normal',
+              lineHeight: 20
+            },
+            value: {
+              color: '#FFFFFF',
+              fontSize: 24,
+              fontWeight: 'bold',
+              lineHeight: 30
+            },
+            percent: {
+              color: '#DEE9FF',
+              fontSize: 12,
+              fontWeight: 'normal',
+              lineHeight: 20
+            }
+          }
+        },
+        data: [
+          { value: 1, name: '' }
+        ],
+        itemStyle: {
+          color: 'transparent'
+        },
+        silent: true
+      },
+    ]
+```
+
+
+
+### dataZoom坐标滚动
+
+```js
+    dataZoom: [
+      {
+        type: 'slider',
+        show: true,
+        xAxisIndex: [0],
+        start: 0,
+        end: 20, // 初始显示20%的数据
+        bottom: '5%',
+        height: 20
+      },
+      {
+        type: 'inside',
+        xAxisIndex: [0],
+        start: 0,
+        end: 100
+      }
+    ],
+```
+
+#### 鼠标移入时展示滚动条，移出时隐藏
+
+```jsx
+const chartDom = document.getElementById('mainChart');  
+const chartRef = useRef<any>(echarts.init(chartDom)); // chartRef.current为echarts实例
+
+  useEffect(() => {
+    if (!chartRef.current) return;
+
+    const chartInstance = chartRef.current;
+    const dom = chartInstance.getDom();
+    console.log("初始化图表事件监听");
+    const handleMouseEnter = () => {
+      chartInstance.setOption({ dataZoom: [{ show: true }] });
+    };
+    const handleMouseLeave = () => {
+      chartInstance.setOption({ dataZoom: [{ show: false }] });
+    };
+
+    // 添加事件监听
+    dom.addEventListener('mouseenter', handleMouseEnter);
+    dom.addEventListener('mouseleave', handleMouseLeave);
+
+    // 清理函数
+    return () => {
+      console.log("清理图表事件监听");
+      dom.removeEventListener('mouseenter', handleMouseEnter);
+      dom.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [chartRef.current]);
 ```
 
 ## 常用图表示例

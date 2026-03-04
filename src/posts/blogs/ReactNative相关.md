@@ -31,7 +31,7 @@ https://www.react-native.cn/
 
 1. 插拔数据线
 2. adb reverse tcp:8081 tcp:8081
-3. yarn dev
+3. yarn dev(重要：**开发模式下必须先确保手机打开了usb调试**)
 4. 手机点开app
 
 
@@ -58,6 +58,14 @@ Get-ChildItem -Path . -Recurse -Directory -Filter "build" | Remove-Item -Recurse
 1. 手机装好app
 2. 电脑启动热点，手机连接(注意代理地址和电脑端ipconfig的地址一致如：192.168.1.129)，此时使用`adb devices` 和`adb reverse tcp:8081 tcp:8081` 无法看到有效设备为正常情况
 3. 电脑如果有开启了fildder**抓包工具**，手机上连接的热点也需**手动设置好代理地址**，和配置好和**抓包工具相同的端口**，执行yarn start启动应用才能连接上，否则会一直提示`No apps connected. Sending "reload" to all React Native apps failed. Make sure your app is running in the simulator or on a phone connected via USB.`
+
+###  通过adb命令来连接android设备装包
+
+https://share.note.youdao.com/s/BjBh1Pyf
+
+1、连接设备：adb connect 手动输入的ip地址
+
+2、安装包： adb install 包地址
 
 ### 手机连接app启动失败
 

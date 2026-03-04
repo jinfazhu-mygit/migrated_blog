@@ -482,6 +482,17 @@ grid-template-rows: repeat(auto-fill, 104px); // 自动行 item高度为104px
 grid-gap: 42px; // 还有grid-column-gap和grid-row-gap分别区分行列间距
 ```
 
+
+```css
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      column-gap: vh(5);
+      row-gap: vw(16);
+    }
+```
+
 ### 12. em与rem
 
 #### 12.1 em: em为相对长度单位，相对于当前对象内文本的字体尺寸。如当前行内文本字体尺寸未被人为设置，则相对于浏览器的默认字体尺寸。em会继承父元素字体大小
@@ -511,16 +522,34 @@ grid-gap: 42px; // 还有grid-column-gap和grid-row-gap分别区分行列间距
 :wink::wink::wink:
 
 
-## 文本相关
+## 文本相关(倾斜、渐变)
 
 * font-family: "微软雅黑"，"Microsoft YaHei",Arial;  设置文本字体
 * font-weight: bold|bolder|700；   直接通过设置number数值(100-900)来设置文本粗细(默认为400)
 * font-style: italic|normal  斜体设置
+* transform: skewY(10deg); 文字倾斜角度
 * font: italic 700 16px/lineheight 'Microsoft yahei'  复合写法 (*font-size*和*font-family***必须有**)
 * text-align: left|center|right  文本对齐
 * text-decoration: **none**|**underline**|overline|linethrough  划线(a标签的下划线可通过此去除)
 * text-indent: 20px|2em; p的首行缩进，*2em*表示当前**一个文字**大小的两倍
 * line-height: 26px;  其中line-height包括的是**上间距**、**字高**、**下间距之和**
+
+```css
+  /* 创建渐变背景1 */
+  background: linear-gradient(180deg,
+            #C8D7E4 0%,
+            #FFFFFF 100%);
+  /* 创建渐变背景2 */
+  background: linear-gradient(to bottom, #ff0000, #ff9900, #ffff00, #00ff00, #0099ff, #6600ff);
+
+  /* 关键属性：将背景裁剪为文字形状 */
+  -webkit-background-clip: text;
+  background-clip: text;
+  
+  /* 使文字颜色透明，以显示背景渐变 */
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+```
 
 ## background相关
 
@@ -538,6 +567,477 @@ background: rgba(0,0,0,1)  最后一个参数设置透明度
 
 ```css
 background: url('../../images/---.png') no-repeat 0px 0px, linear-gradient(to right, #009cff, #39d7ff);
+```
+
+## scss字体引入使用相关
+
+```css
+// 全局样式文件添加 global.scss 或 default.module.scss
+:global {
+  @font-face {
+    font-family: 'YouSheBiaoTiHei';
+    src: url('./fonts/YouSheBiaoTiHei-2.ttf');
+  }
+}
+
+// 使用
+.test {
+  font-family: YouSheBiaoTiHei;
+}
+```
+
+## 水球体波浪渐变组件
+
+waterBall.tsx
+
+```jsx
+// React组件
+import React, { useEffect, useMemo } from 'react';
+import styles from './Ball.module.scss';
+import { vh, vw } from '@/utils/reSize';
+// @ts-ignore
+import { uniqueId } from 'loadsh';
+
+type WaterBallProps = {
+  width: number;
+  height: number;
+  value: number;
+  waveFrontBgColor: string; // 波浪前颜色
+  waveBackBgColor: string; // 波浪后颜色
+  style: 'blue' | 'green'; // 蓝色主题还是绿色主题
+};
+
+const WaterBall = (props: WaterBallProps) => {
+  const {
+    width,
+    height,
+    value,
+    waveFrontBgColor,
+    waveBackBgColor,
+    style = 'blue',
+  } = props;
+
+  // 使用随机id绑定
+  let waterId = useMemo(() => {
+    return uniqueId('water_');
+  }, []);
+
+  let countId = useMemo(() => {
+    return uniqueId('count_');
+  }, []);
+
+  useEffect(() => {
+    const waterEl: any = document.getElementById(waterId)
+    const countEl: any = document.getElementById(countId)
+
+    // 移动高度从100组件减小
+    let transformHeight = 100
+
+    let interval: any = null
+    interval = setInterval(() => {
+      if (100 - transformHeight === value) {
+        clearInterval(interval)
+      }
+      if (transformHeight >= 0) {
+        waterEl.style.transform = `translate(0, ${transformHeight}%)`
+        countEl.innerHTML = 100 - transformHeight
+        transformHeight--
+      } else {
+        clearInterval(interval)
+      }
+    }, 60)
+
+    return () => {
+
+    }
+  }, []);
+
+  return (
+    <div className={styles['water-ball']}>
+      <svg version="1.1" xmlns="https://www.w3.org/2000/svg" xmlnsXlink="https://www.w3.org/1999/xlink" x="0px" y="0px"
+        style={{ display: 'none' }}>
+        <symbol id="wave">
+          <path
+            d="M420,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C514,6.5,518,4.7,528.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H420z">
+          </path>
+          <path
+            d="M420,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C326,6.5,322,4.7,311.5,2.7C304.3,1.4,293.6-0.1,280,0c0,0,0,0,0,0v20H420z">
+          </path>
+          <path
+            d="M140,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C234,6.5,238,4.7,248.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H140z">
+          </path>
+          <path
+            d="M140,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C46,6.5,42,4.7,31.5,2.7C24.3,1.4,13.6-0.1,0,0c0,0,0,0,0,0l0,20H140z">
+          </path>
+        </symbol>
+      </svg>
+      <div className={styles['box']} style={{ width: width ? vw(width) : '100px', height: height ? vh(height) : '100px' }}>
+        <div className={styles['percent']}>
+          <div className={styles['percentNum']} id={countId}>0</div>
+          <div className={styles['percentB']}>%</div>
+        </div>
+        <div id={waterId} className={styles['water']} style={{ background: style === 'blue' ? 'linear-gradient(to bottom, #00BBFF, #187FFF)' : 'linear-gradient(to bottom, #1ADF20, #1FD931CC, #52CB62CC, #52CB62)' }}>
+          <svg viewBox="0 0 560 20" className={`${styles['water_wave']} ${styles['water_wave_back']}`} style={{ fill: waveBackBgColor ? waveBackBgColor : '#c7eeff' }}>
+            <use xlinkHref="#wave"></use>
+          </svg>
+          <svg viewBox="0 0 560 20" className={`${styles['water_wave']} ${styles['water_wave_front']}`} style={{ fill: waveFrontBgColor ? waveFrontBgColor : '#4d6de3' }}>
+            <use xlinkHref="#wave"></use>
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default WaterBall;
+```
+
+Ball.module.scss
+
+```scss
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  outline: none;
+}
+
+.box {
+  height: 115px;
+  width: 115px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #b2daff48;
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.box .percent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+
+  justify-content: center;
+  width: 100%;
+  height: vh(27);
+  line-height: vh(27);
+  text-align: center;
+  position: absolute;
+  top: calc(50% - vh(13.5));
+  font-family: D-DIN-PRO;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: fontSize(24);
+  leading-trim: NONE;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #fff;
+}
+
+.box .water {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  transform: translate(0, 50%);
+  background: linear-gradient(to bottom, #00BBFF, #187FFF);
+}
+
+.box .water_wave {
+  width: 200%;
+  position: absolute;
+  bottom: 100%;
+}
+
+.box .water_wave_back {
+  right: 0;
+  animation: moveToRight 1.8s linear infinite;
+}
+
+.box .water_wave_front {
+  left: 0;
+  margin-bottom: -1px;
+  animation: moveToleft 1.8s linear infinite;
+}
+
+/* 两个波浪分别向左和向右平移 */
+@keyframes moveToRight {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(115px);
+  }
+}
+
+@keyframes moveToleft {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-115px);
+  }
+}
+```
+
+### 使用
+
+```jsx
+import { observer, useLocalObservable } from 'mobx-react';
+import { FC, useEffect, useState } from 'react';
+import styles from './index.module.scss';
+import IndexMobx from '../../mobx';
+import IndexMobx1 from '@/mobx/echartsMapMbox';
+import { showStaticData } from '@/utils/utils';
+import { adcodeFormat } from '@/utils/utils';
+import NewCardBox from '@/components/newCardBox';
+import { _throttle } from '@/utils/utilFunc';
+import CardBox from '@/components/cardBox';
+import WaterBall from '../waterball/waterBall';
+
+type LeftSecondProps = {
+  vm: any;
+  [name: string]: any;
+};
+
+const RightThird: FC<LeftSecondProps> = props => {
+  const VM = useLocalObservable(() => IndexMobx1);
+  const vm = useLocalObservable(() => IndexMobx);
+
+  const [value, setValue] = useState(58);
+
+  useEffect(() => {
+    if (VM.adcode.length && !showStaticData) {
+      // const areaCodeObj = getAreaCodeCityAndDistrictCode(VM.adcode)
+      vm.getSchoolBaseInfo({
+        nodeId: adcodeFormat(VM.adcode)
+      });
+    }
+
+    return () => {
+      // vm.resetMobx();
+    };
+  }, [VM.adcode]);
+
+  return (
+    <CardBox title={'培训就业通过率'} width={440} height={238}>
+      <div className={styles['box']}>
+        <div className={styles['left_ball']}>
+          <div className={styles['ball_text']}>
+            <WaterBall
+              width={115}
+              height={115}
+              value={value}
+              waveFrontBgColor='#00BBFF'
+              waveBackBgColor='#1B9EF5'
+              style='blue'
+            ></WaterBall>
+          </div>
+          <div className={styles['bottom_text']}>推荐就业率</div>
+        </div>
+        <div className={styles['right_ball']}>
+          <div className={styles['ball_text']}>
+            <WaterBall
+              width={115}
+              height={115}
+              value={value}
+              waveFrontBgColor='#1ADF20'
+              waveBackBgColor='#10726F'
+              style='green'
+            ></WaterBall>
+          </div>
+          <div className={styles['bottom_text']}>平均满意度</div>
+        </div>
+      </div>
+    </CardBox>
+  );
+};
+export default observer(RightThird);
+
+```
+
+### html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    body {
+      background: #020438;
+      font: 14px/1 "Open Sans", helvetica, sans-serif;
+    }
+
+    .box {
+      height: 280px;
+      width: 280px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #020438;
+      border-radius: 100%;
+      overflow: hidden;
+    }
+
+    .box .percent {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      display: -webkit-flex;
+      align-items: center;
+
+      justify-content: center;
+      color: #fff;
+      font-size: 64px;
+    }
+
+    .box .water {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      transform: translate(0, 50%);
+      background: #4d6de3;
+    }
+
+    .box .water_wave {
+      width: 200%;
+      position: absolute;
+      bottom: 100%;
+    }
+
+    .box .water_wave_back {
+      right: 0;
+      fill: #c7eeff;
+      animation: moveToRight 1.5s linear infinite;
+    }
+
+    .box .water_wave_front {
+      left: 0;
+      fill: #4d6de3;
+      margin-bottom: -1px;
+      animation: moveToleft 0.8s linear infinite;
+    }
+
+    /* 两个波浪分别向左和向右平移 */
+    @keyframes moveToRight {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(280px);
+      }
+    }
+
+    @keyframes moveToleft {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-280px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="water-ball">
+    <svg version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px"
+      style="display: none">
+      <symbol id="wave">
+        <path
+          d="M420,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C514,6.5,518,4.7,528.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H420z">
+        </path>
+        <path
+          d="M420,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C326,6.5,322,4.7,311.5,2.7C304.3,1.4,293.6-0.1,280,0c0,0,0,0,0,0v20H420z">
+        </path>
+        <path
+          d="M140,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C234,6.5,238,4.7,248.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H140z">
+        </path>
+        <path
+          d="M140,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C46,6.5,42,4.7,31.5,2.7C24.3,1.4,13.6-0.1,0,0c0,0,0,0,0,0l0,20H140z">
+        </path>
+      </symbol>
+    </svg>
+    <div class="box">
+      <div class="percent">
+        <div class="percentNum" id="count">0</div>
+        <div class="percentB">%</div>
+      </div>
+      <div id="water" class="water">
+        <svg viewBox="0 0 560 20" class="water_wave water_wave_back">
+          <use xlink:href="#wave"></use>
+        </svg>
+        <svg viewBox="0 0 560 20" class="water_wave water_wave_front">
+          <use xlink:href="#wave"></use>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function () {
+      const waterEl = document.getElementById('water')
+      const countEl = document.getElementById('count')
+
+      // 移动高度从100组件减小
+      let transformHeight = 100
+
+      let interval = null
+      interval = setInterval(() => {
+        if (100 - transformHeight === 5) {
+          clearInterval(interval)
+        }
+        if (transformHeight >= 0) {
+          waterEl.style.transform = `translate(0, ${transformHeight}%)`
+          countEl.innerHTML = 100 - transformHeight
+          transformHeight--
+        } else {
+          clearInterval(interval)
+        }
+      }, 60)
+    }
+  </script>
+</body>
+
+</html>
 ```
 
 ## 影响div盒子大小的因素
