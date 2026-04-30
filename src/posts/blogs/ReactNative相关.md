@@ -6,10 +6,10 @@ isTimeLine: true
 # sidebar: auto
 # sidebarDepth: 1
 category:
- - 我的前端路线
+  - 我的前端路线
 tag:
- - javascript
- - react-native
+  - javascript
+  - react-native
 # isShowComments: false
 # publish: true
 icon: pen-to-square
@@ -17,9 +17,7 @@ star: true
 sticky: true
 ---
 
-
-
-##  
+##
 
 ### 官方文档、环境配置
 
@@ -34,24 +32,21 @@ https://www.react-native.cn/
 3. yarn dev(重要：**开发模式下必须先确保手机打开了usb调试**)
 4. 手机点开app
 
-
 删除当前文件夹下所有以build命名的文件夹及内部文件
 
 ```powershell
 Get-ChildItem -Path . -Recurse -Directory -Filter "build" | Remove-Item -Recurse -Force
 ```
 
-
 ### 重连手机
 
 1. 插拔数据线(**必须确认手机打开了开发者模式，且usb调试也已打开!!!**)
-2. `adb reverse tcp:8081 tcp:8081`  (返回提示8081则为正确连接)
+2. `adb reverse tcp:8081 tcp:8081` (返回提示8081则为正确连接)
 3. `adb devices`可查看当前可用设备(如以上两个命令无效，请再次确认手机打开了开发者模式，且usb调试也已打开)
 4. `yarn start` (`yarn start --reset-cache`可清除 Metro 缓存)
 5. 手机点开app
 6. 键入r，重加载app(已连接的情况下，可能需要多点击几次reload app或r，手机重进app)
 7. 键入d(或者摇晃手机)，手机上会出现调试栏目，点击debug，跳转到浏览器`http://localhost:8081/debugger-ui/` 可查看开发打印信息(或**关闭浏览器自动默认调试页**：http://localhost:8081/debugger-ui/， **运行React Native Debugger调试工具**，然后重跑重开应用，React Native Debugger调试工具内执行Edit -> Redo)
-
 
 ### 真机远程(借用抓包工具filddler)
 
@@ -59,7 +54,7 @@ Get-ChildItem -Path . -Recurse -Directory -Filter "build" | Remove-Item -Recurse
 2. 电脑启动热点，手机连接(注意代理地址和电脑端ipconfig的地址一致如：192.168.1.129)，此时使用`adb devices` 和`adb reverse tcp:8081 tcp:8081` 无法看到有效设备为正常情况
 3. 电脑如果有开启了fildder**抓包工具**，手机上连接的热点也需**手动设置好代理地址**，和配置好和**抓包工具相同的端口**，执行yarn start启动应用才能连接上，否则会一直提示`No apps connected. Sending "reload" to all React Native apps failed. Make sure your app is running in the simulator or on a phone connected via USB.`
 
-###  通过adb命令来连接android设备装包
+### 通过adb命令来连接android设备装包
 
 https://share.note.youdao.com/s/BjBh1Pyf
 
@@ -83,21 +78,21 @@ https://share.note.youdao.com/s/BjBh1Pyf
 
 ![](https://s21.ax1x.com/2025/07/29/pVY5G4K.png)
 
-* 移除不影响流程的警告和报错
+- 移除不影响流程的警告和报错
 
 ![](https://s21.ax1x.com/2025/07/30/pVtFzdI.png)
 
-* 当启动了react-native-debugger时可能会出现**影响虚拟机交互**如长按拖动的功能
-* **React Native 默认不监控网络请求**，需要手动添加拦截代码后react-native-debugger才能看到应用接口请求
-* https://chat.deepseek.com/a/chat/s/360c0792-bfdc-4241-bc84-a7d6ff6dc7d5
+- 当启动了react-native-debugger时可能会出现**影响虚拟机交互**如长按拖动的功能
+- **React Native 默认不监控网络请求**，需要手动添加拦截代码后react-native-debugger才能看到应用接口请求
+- https://chat.deepseek.com/a/chat/s/360c0792-bfdc-4241-bc84-a7d6ff6dc7d5
 
 index.js：
 
 ```js
 // ⚠️ 添加网络请求监控（开发环境生效） React Native Debugger调试用
 if (__DEV__) {
-  global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
-  global.FormData = global.originalFormData || global.FormData;
+  global.XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest
+  global.FormData = global.originalFormData || global.FormData
 }
 ```
 
@@ -114,8 +109,11 @@ if (__DEV__) {
 1. 清除app后台重进尝试
 2. **清理app应用数据缓存(有效)**或重装app
 
-
 出现阻断性错误记得**切换查看报错**，或者重走以上流程
+
+### WebView页调试
+
+命令：`edge://inspect/#devices` 或 `chrome://inspect/#devices`
 
 ### 常用方法
 
@@ -139,32 +137,35 @@ test {
 ```js
 import { Text, StyleSheet, View, Image, NativeModules, BackHandler } from 'react-native'
 import React, { Component, useEffect } from 'react'
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { getStatusBarHeight } from 'react-native-status-bar-height'
 
-const statusBarHeight = getStatusBarHeight();
+const statusBarHeight = getStatusBarHeight()
 
 const TabChange = () => {
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress)
 
     return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress)
     }
-  }, []);
+  }, [])
 
   const handleBackPress = () => {
     // 根据需求实现返回键的逻辑，例如导航返回上一页
-    NativeModules.IntentModule.back();
-  };
+    NativeModules.IntentModule.back()
+  }
 
   const goBack = () => {
-    NativeModules.IntentModule.back();
-  };
+    NativeModules.IntentModule.back()
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.head}>
-        <View style={styles.backView} onTouchStart={goBack}>
+        <View
+          style={styles.backView}
+          onTouchStart={goBack}
+        >
           <Image
             source={require('~image/common/back.png')}
             style={styles.back}
@@ -193,29 +194,29 @@ const styles = StyleSheet.create({
 /utils/eventBus.js
 
 ```js
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'events'
 
-export const EventBus = new EventEmitter();
-EventBus.setMaxListeners(20);
+export const EventBus = new EventEmitter()
+EventBus.setMaxListeners(20)
 ```
 
 ```js
-import { EventBus } from '~/util/eventBus';
+import { EventBus } from '~/util/eventBus'
 
 class TestPage extends React.PureComponent {
   componentDidMount() {
     // 事件监听必须通过函数名来指定，因为移除监听时需要通过名称指定的函数才能正确进行移除
-    EventBus.on('refreshTab', this.eventOnFn);
+    EventBus.on('refreshTab', this.eventOnFn)
   }
-  
+
   eventOnFn(args) {
-      console.log("%c Line:129 🥛 refreshTab", "color:#33a5ff", args);
-      this.showCurrentTab()
+    console.log('%c Line:129 🥛 refreshTab', 'color:#33a5ff', args)
+    this.showCurrentTab()
   }
-  
+
   componentWillUnmount() {
     // EventBus.off移除时必需加上相应的监听函数
-    EventBus.off('refreshTab', this.eventOnFn);
+    EventBus.off('refreshTab', this.eventOnFn)
   }
 }
 ```
@@ -223,7 +224,7 @@ class TestPage extends React.PureComponent {
 ```js
 class OtherPage extends React.PureComponent {
   componentDidMount() {
-    EventBus.emit('refreshTab', { test: '123abc' });
+    EventBus.emit('refreshTab', { test: '123abc' })
   }
 }
 ```
@@ -238,7 +239,13 @@ export default class TestPage extends Component {
   render() {
     return (
       <View style={styles.body}>
-        <Text numberOfLines={2} ellipsizeMode={'tail'} style={styles.notice_title}>我是长文本</Text>
+        <Text
+          numberOfLines={2}
+          ellipsizeMode={'tail'}
+          style={styles.notice_title}
+        >
+          我是长文本
+        </Text>
       </View>
     )
   }
@@ -247,12 +254,12 @@ export default class TestPage extends Component {
 const styles = StyleSheet.create({
   body: {
     width: 200,
-    height: 100
+    height: 100,
   },
   notice_title: {
     color: '#333333',
     fontSize: 15,
-  }
+  },
 })
 ```
 
@@ -267,9 +274,10 @@ const styles = StyleSheet.create({
 >
   <LinearGradient
     colors={['#ebebebff', '#3b3b3bff']} // 渐变颜色数组
-    start={{ x: 0, y: 0 }}        // 渐变起点（左侧中间）
-    end={{ x: 0, y: 1 }}          // 渐变终点（右侧中间）
-    style={styles.bottom_grey}>
+    start={{ x: 0, y: 0 }} // 渐变起点（左侧中间）
+    end={{ x: 0, y: 1 }} // 渐变终点（右侧中间）
+    style={styles.bottom_grey}
+  >
     <Text style={styles.right_bottom}>1231</Text>
   </LinearGradient>
 </ImageBackground>
@@ -280,32 +288,39 @@ const styles = StyleSheet.create({
 需熟悉LinearGradient的start end方向是如何运确定的
 
 ```js
-import LinearGradient from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient'
 import { Text, View } from 'react-native'
 import React, { Component } from 'react'
 
 export default class TestPage extends Component {
   render() {
     return (
-          <>
-            <LinearGradient
-              colors={['#FFE3C8', '#FFFCFC']} // 渐变颜色数组
-              start={{ x: 0, y: 0.5 }}        // 渐变起点（左侧中间）
-              end={{ x: 1, y: 0.5 }}          // 渐变终点（右侧中间）
-              style={styles.body}
-            >
-              <Text>ChildLearnSituation</Text>
-            </LinearGradient>
+      <>
+        <LinearGradient
+          colors={['#FFE3C8', '#FFFCFC']} // 渐变颜色数组
+          start={{ x: 0, y: 0.5 }} // 渐变起点（左侧中间）
+          end={{ x: 1, y: 0.5 }} // 渐变终点（右侧中间）
+          style={styles.body}
+        >
+          <Text>ChildLearnSituation</Text>
+        </LinearGradient>
 
-            <LinearGradient
-              colors={['white', 'rgba(255, 255, 255, 0.5)', 'transparent', 'transparent', 'rgba(255, 255, 255, 0.5)', 'white']}
-              locations={[0, 0.05, 0.2, 0.8, 0.95, 1]} // 设置渐变百分比位置colors数量需和locations的数量保持一致
-              start={{ x: 0.5, y: 0 }}
-              end={{ x: 0.5, y: 1 }}          // 渐变终点（右侧中间）
-              style={styles.linear_gradient}
-              pointerEvents='none' // pointerEvents设置为none让触摸事件穿透LinearGradient，这样其内部节点可以接收到触摸事件。
-            ></LinearGradient>
-          </>
+        <LinearGradient
+          colors={[
+            'white',
+            'rgba(255, 255, 255, 0.5)',
+            'transparent',
+            'transparent',
+            'rgba(255, 255, 255, 0.5)',
+            'white',
+          ]}
+          locations={[0, 0.05, 0.2, 0.8, 0.95, 1]} // 设置渐变百分比位置colors数量需和locations的数量保持一致
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }} // 渐变终点（右侧中间）
+          style={styles.linear_gradient}
+          pointerEvents="none" // pointerEvents设置为none让触摸事件穿透LinearGradient，这样其内部节点可以接收到触摸事件。
+        ></LinearGradient>
+      </>
     )
   }
 }
@@ -313,7 +328,7 @@ export default class TestPage extends Component {
 const styles = StyleSheet.create({
   body: {
     width: 200,
-    height: 100
+    height: 100,
   },
 })
 ```
@@ -321,39 +336,49 @@ const styles = StyleSheet.create({
 #### Modal弹窗
 
 ```js
-import { Text, StyleSheet, View, Image, TouchableWithoutFeedback, Alert, Modal, Dimensions, ScrollView } from 'react-native'
+import {
+  Text,
+  StyleSheet,
+  View,
+  Image,
+  TouchableWithoutFeedback,
+  Alert,
+  Modal,
+  Dimensions,
+  ScrollView,
+} from 'react-native'
 import React, { Component, useEffect, useState } from 'react'
 import BlockHeader from '~/page-component/home/BlockHeader'
-import { useSelfPageStore } from '../SelfPageStore';
-import LinearGradient from 'react-native-linear-gradient';
-import { TouchableOpacity } from 'react-native';
-import { TouchableHighlight } from 'react-native';
+import { useSelfPageStore } from '../SelfPageStore'
+import LinearGradient from 'react-native-linear-gradient'
+import { TouchableOpacity } from 'react-native'
+import { TouchableHighlight } from 'react-native'
 
 const ChildLearnSituation = (props) => {
-  const selfPageStore = props.selfPageStore;
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedChild, setSelectedChild] = useState(null);
+  const selfPageStore = props.selfPageStore
+  const [modalVisible, setModalVisible] = useState(false)
+  const [selectedChild, setSelectedChild] = useState(null)
   const [children, setChildren] = useState([
-    { id: 1, name: "万知学", avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
-    { id: 2, name: "李小萌", avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
-    { id: 3, name: "张小明", avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
-    { id: 4, name: "刘小华", avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
-    { id: 5, name: "王小乐", avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
-    { id: 6, name: "赵小雨", avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
-    { id: 7, name: "赵小雨", avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
-    { id: 8, name: "赵小雨", avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
-    { id: 9, name: "赵小雨", avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
-  ]);
+    { id: 1, name: '万知学', avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
+    { id: 2, name: '李小萌', avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
+    { id: 3, name: '张小明', avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
+    { id: 4, name: '刘小华', avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
+    { id: 5, name: '王小乐', avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
+    { id: 6, name: '赵小雨', avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
+    { id: 7, name: '赵小雨', avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
+    { id: 8, name: '赵小雨', avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
+    { id: 9, name: '赵小雨', avatar: 'https://s21.ax1x.com/2025/07/29/pVY5G4K.png' },
+  ])
 
   useEffect(() => {
     // 初始化选择第一个孩子
     if (children.length > 0 && !selectedChild) {
-      setSelectedChild(children[0]);
+      setSelectedChild(children[0])
     }
 
     // 模拟数据加载
-    getChildLearnSituationFn();
-  }, []);
+    getChildLearnSituationFn()
+  }, [])
 
   const getChildLearnSituationFn = async () => {
     // 实际项目中这里会调用API获取数据
@@ -361,23 +386,23 @@ const ChildLearnSituation = (props) => {
     // selfPageStore.setChildLearnSituationData(res);
 
     // 模拟API延迟
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500))
   }
 
   const handleSelectChild = (child) => {
-    setSelectedChild(child);
+    setSelectedChild(child)
   }
 
   const confirmSelection = () => {
-    setModalVisible(false);
+    setModalVisible(false)
     // 这里可以添加保存选择的逻辑
   }
 
   return (
     <LinearGradient
       colors={['#FFE3C8', '#FFFCFC']} // 渐变颜色数组
-      start={{ x: 0, y: 0.5 }}        // 渐变起点（左侧中间）
-      end={{ x: 1, y: 0.5 }}          // 渐变终点（右侧中间）
+      start={{ x: 0, y: 0.5 }} // 渐变起点（左侧中间）
+      end={{ x: 1, y: 0.5 }} // 渐变终点（右侧中间）
       style={styles.body}
     >
       <View style={styles.situation_line}>
@@ -391,11 +416,11 @@ const ChildLearnSituation = (props) => {
           <View style={styles.center_text}>
             <View style={styles.top_text}>
               <View>
-                <Text style={styles.top_left_text}>
-                  {selectedChild ? selectedChild.name : '请选择孩子'}
-                </Text>
+                <Text style={styles.top_left_text}>{selectedChild ? selectedChild.name : '请选择孩子'}</Text>
               </View>
-              <View><Text style={styles.top_right_text}>的学习情况</Text></View>
+              <View>
+                <Text style={styles.top_right_text}>的学习情况</Text>
+              </View>
             </View>
             <Text style={styles.bottom_text}>点击切换其它孩子学习情况</Text>
           </View>
@@ -422,10 +447,7 @@ const ChildLearnSituation = (props) => {
                 {children.map((child) => (
                   <TouchableOpacity
                     key={child.id}
-                    style={[
-                      styles.child_item,
-                      selectedChild?.id === child.id && styles.selected_child
-                    ]}
+                    style={[styles.child_item, selectedChild?.id === child.id && styles.selected_child]}
                     onPress={() => handleSelectChild(child)}
                   >
                     <View style={styles.child_info}>
@@ -473,9 +495,14 @@ const ChildLearnSituation = (props) => {
 }
 
 const withStore = (BaseComponent) => (props) => {
-  const selfPageStore = useSelfPageStore();
-  return <BaseComponent {...props} selfPageStore={selfPageStore} />;
-};
+  const selfPageStore = useSelfPageStore()
+  return (
+    <BaseComponent
+      {...props}
+      selfPageStore={selfPageStore}
+    />
+  )
+}
 
 export default withStore(ChildLearnSituation)
 
@@ -488,7 +515,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: '#fff',
     boxSizing: 'border-box',
-    padding: 10
+    padding: 10,
   },
   situation_line: {
     width: '100%',
@@ -508,7 +535,7 @@ const styles = StyleSheet.create({
     width: 54,
     height: 54,
     marginRight: 10,
-    borderRadius: 10
+    borderRadius: 10,
   },
   center_text: {
     display: 'flex',
@@ -516,14 +543,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 6,
     position: 'relative',
-    top: 1
+    top: 1,
   },
   top_text: {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'row',
-    gap: 5
+    gap: 5,
   },
   top_left_text: {
     fontSize: 16,
@@ -537,31 +564,31 @@ const styles = StyleSheet.create({
   },
   bottom_text: {
     color: '#999',
-    fontSize: 12
+    fontSize: 12,
   },
   right_switch: {
     width: 26,
-    height: 26
+    height: 26,
   },
   // 弹窗相关样式
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalView: {
     width: Dimensions.get('window').width * 0.9,
     maxHeight: Dimensions.get('window').height * 0.7,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 20,
     paddingBottom: 20,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -571,7 +598,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#000',
-    marginBottom: 15
+    marginBottom: 15,
   },
   childList: {
     width: '100%',
@@ -643,31 +670,27 @@ const styles = StyleSheet.create({
 #### tab切换组件(react-native-tab-view)
 
 ```js
-import * as React from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
-import PropTypes from 'prop-types';
-import { RootSiblingParent } from 'react-native-root-siblings';
-import { Text } from 'react-native';
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
-import { useNavigation } from '@react-navigation/native';
+import * as React from 'react'
+import { View, StyleSheet, Dimensions } from 'react-native'
+import PropTypes from 'prop-types'
+import { RootSiblingParent } from 'react-native-root-siblings'
+import { Text } from 'react-native'
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view'
+import { useNavigation } from '@react-navigation/native'
 
 const LazyPlaceholder = ({ route }) => (
   <View style={styles.scene}>
     <Text>Loading {route.title}…</Text>
   </View>
-);
+)
 
 class HomePage extends React.PureComponent {
   static propTypes = {
     itemWidth: PropTypes.number.isRequired,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       showTabbar: false,
       index: 0,
@@ -676,105 +699,109 @@ class HomePage extends React.PureComponent {
         { key: '2', title: '个人主页' },
       ],
       sliderWidth: 0,
-    };
+    }
     // this.showCurrentTab();
   }
 
   renderRecommendContent = () => {
-    return <Text>推荐页</Text>;
-  };
+    return <Text>推荐页</Text>
+  }
 
   renderSelfContent = () => {
-    return <Text>个人主页</Text>;
+    return <Text>个人主页</Text>
   }
 
   // tabbar栏目
   _renderTabBar = (props) => {
     // console.log("%c Line:313 🍌 props", "color:#ea7e5c", props);
-    return <>{
-      this.state.showTabbar ? <TabBar
-        scrollEnabled={true}
-        {...props}
-        gap={0}
-        style={{
-          height: 40,
-          backgroundColor: '#fff',
-          shadowColor: '#fff',
-          borderWidth: 0,
-          elevation: 0,
-          // marginBottom: 10,
-          width: this.state.sliderWidth - 40,
-          paddingRight: 16
-        }}
-        indicatorStyle={{
-          display: 'none',
-        }}
-        tabStyle={{
-          position: 'relative',
-          padding: 0,
-          width: 'auto',
-          marginRight: 12,
-        }}
-        contentContainerStyle={{}}
-        pressColor={'#fff'}
-        onTabPress={({ route, preventDefault }) => {
-          if (route.key === 'third' || route.key === 'fourth') {
-            return false
-          } else return true
-        }}
-        renderLabel={({ route, focused, color }) => {
-          // console.log("%c Line:346 🥚 route", "color:#fca650", route);
-          return (
-            <View
-              style={{
-                height: 40,
-                position: 'relative',
-                bottom: 4,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 8,
-                paddingRight: 8,
-                backgroundColor: '#fff',
-                shadowColor: '#ffffff',
-              }}
-            >
-              <Text
-                style={{
-                  color: focused ? '#E42419' : '#333333',
-                  fontSize: 16,
-                  fontWeight: focused ? '800' : '400',
-                }}
-                numberOfLines={1}
-              >
-                {route.title}
-              </Text>
-              {focused && (
+    return (
+      <>
+        {this.state.showTabbar ? (
+          <TabBar
+            scrollEnabled={true}
+            {...props}
+            gap={0}
+            style={{
+              height: 40,
+              backgroundColor: '#fff',
+              shadowColor: '#fff',
+              borderWidth: 0,
+              elevation: 0,
+              // marginBottom: 10,
+              width: this.state.sliderWidth - 40,
+              paddingRight: 16,
+            }}
+            indicatorStyle={{
+              display: 'none',
+            }}
+            tabStyle={{
+              position: 'relative',
+              padding: 0,
+              width: 'auto',
+              marginRight: 12,
+            }}
+            contentContainerStyle={{}}
+            pressColor={'#fff'}
+            onTabPress={({ route, preventDefault }) => {
+              if (route.key === 'third' || route.key === 'fourth') {
+                return false
+              } else return true
+            }}
+            renderLabel={({ route, focused, color }) => {
+              // console.log("%c Line:346 🥚 route", "color:#fca650", route);
+              return (
                 <View
                   style={{
-                    position: 'absolute',
-                    height: 3,
-                    width: 16,
-                    // left: '50%',
-                    // marginLeft: -9,
-                    bottom: 0,
-                    borderRadius: 2,
-                    backgroundColor: '#E42419',
+                    height: 40,
+                    position: 'relative',
+                    bottom: 4,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingLeft: 8,
+                    paddingRight: 8,
+                    backgroundColor: '#fff',
+                    shadowColor: '#ffffff',
                   }}
-                ></View>
-              )}
-            </View>
-          );
-        }}
-      /> : null
-    }</>;
-  };
+                >
+                  <Text
+                    style={{
+                      color: focused ? '#E42419' : '#333333',
+                      fontSize: 16,
+                      fontWeight: focused ? '800' : '400',
+                    }}
+                    numberOfLines={1}
+                  >
+                    {route.title}
+                  </Text>
+                  {focused && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        height: 3,
+                        width: 16,
+                        // left: '50%',
+                        // marginLeft: -9,
+                        bottom: 0,
+                        borderRadius: 2,
+                        backgroundColor: '#E42419',
+                      }}
+                    ></View>
+                  )}
+                </View>
+              )
+            }}
+          />
+        ) : null}
+      </>
+    )
+  }
 
-  _handleIndexChange = index => this.setState({ index });
+  _handleIndexChange = (index) => this.setState({ index })
 
-  _renderLazyPlaceholder = ({ route }) => <LazyPlaceholder route={route} />;
+  _renderLazyPlaceholder = ({ route }) => <LazyPlaceholder route={route} />
 
   render() {
     return (
@@ -786,12 +813,14 @@ class HomePage extends React.PureComponent {
               lazy
               swipeEnabled={this.state.showTabbar ? true : false}
               navigationState={this.state}
-              renderScene={SceneMap({
-                '1': this.renderRecommendContent,
-                '2': this.renderSelfContent,
-                // first: this.renderRecommendContent,
-                // second: this.renderSelfContent,
-              }) || null}
+              renderScene={
+                SceneMap({
+                  1: this.renderRecommendContent,
+                  2: this.renderSelfContent,
+                  // first: this.renderRecommendContent,
+                  // second: this.renderSelfContent,
+                }) || null
+              }
               renderTabBar={this._renderTabBar}
               // 每一个tab的宽度
               tabStyle={{ width: 'auto', minWidth: 68 }}
@@ -802,14 +831,19 @@ class HomePage extends React.PureComponent {
           </View>
         </View>
       </RootSiblingParent>
-    );
+    )
   }
 }
 const withStore = (BaseComponent) => (props) => {
-  const navigation = useNavigation();
-  return <BaseComponent {...props} navigation={navigation} />;
-};
-export default withStore(HomePage);
+  const navigation = useNavigation()
+  return (
+    <BaseComponent
+      {...props}
+      navigation={navigation}
+    />
+  )
+}
+export default withStore(HomePage)
 
 const styles = StyleSheet.create({
   homePage: {
@@ -821,10 +855,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f6fa',
     overflow: 'hidden',
-    width: Dimensions.get('window').width
-  }
-});
-
+    width: Dimensions.get('window').width,
+  },
+})
 ```
 
 ### 组件内部常用命令
@@ -875,66 +908,67 @@ cityTraffic.html
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>cityTraffic.html</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-    }
-
-    body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      /* width: 100vw;
-      height: 100vh; */
-      position: relative;
-      /* margin: 0 auto; */
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .relative_contain {
-      position: relative;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container">
-    <div class="relative_contain">
-      <button id="test_post_message"></button>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const btn = document.getElementById('test_post_message');
-
-      btn.addEventListener('click', () => cityClick('nc'));
-
-      function cityClick(cityName) {
-        console.log("%c Line:194 🥚 cityName", "color:#2eafb0", cityName);
-        // 传递字符串显示通信发给app WebView
-        window.postMessage(JSON.stringify({ cityName: cityName }))
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>cityTraffic.html</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
       }
-    });
-  </script>
-</body>
 
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .container {
+        /* width: 100vw;
+      height: 100vh; */
+        position: relative;
+        /* margin: 0 auto; */
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .relative_contain {
+        position: relative;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="relative_contain">
+        <button id="test_post_message"></button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('test_post_message')
+
+        btn.addEventListener('click', () => cityClick('nc'))
+
+        function cityClick(cityName) {
+          console.log('%c Line:194 🥚 cityName', 'color:#2eafb0', cityName)
+          // 传递字符串显示通信发给app WebView
+          window.postMessage(JSON.stringify({ cityName: cityName }))
+        }
+      })
+    </script>
+  </body>
 </html>
 ```
 
@@ -943,18 +977,13 @@ CityTraffic.js
 注意需加入注入监听的js代码
 
 ```js
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  Image,
-} from 'react-native';
-import React, { Component } from 'react';
-import { openUrl, swichTabBar } from '~util/openUrl';
-import BlockHeader from './BlockHeader';
-import PropTypes from 'prop-types';
-import WebView from 'react-native-webview';
-import { _throttle } from '~/util/utilFn';
+import { StyleSheet, View, Dimensions, Image } from 'react-native'
+import React, { Component } from 'react'
+import { openUrl, swichTabBar } from '~util/openUrl'
+import BlockHeader from './BlockHeader'
+import PropTypes from 'prop-types'
+import WebView from 'react-native-webview'
+import { _throttle } from '~/util/utilFn'
 
 const CITY_DATA = [
   { id: 'nc', name: '南昌市', top: 95, left: 142 },
@@ -969,31 +998,29 @@ const CITY_DATA = [
   { id: 'ja', name: '吉安市', top: 216, left: 86 },
   { id: 'gz', name: '赣州市', top: 274, left: 97 },
   { id: 'gjxq', name: '赣江新区', top: 65, left: 152 },
-];
+]
 
 class CityTraffic extends Component {
   static propTypes = {
     dataObj: PropTypes.object,
-  };
-
-  state = {
-  };
-
-  componentDidMount() {
   }
+
+  state = {}
+
+  componentDidMount() {}
 
   // 去查看全部
   toMore = () => {
-    let url = this.props.dataObj.url;
+    let url = this.props.dataObj.url
     if (url) {
-      openUrl(this.props.dataObj);
-      return;
+      openUrl(this.props.dataObj)
+      return
     }
-    swichTabBar(4);
-  };
+    swichTabBar(4)
+  }
 
   handleCityClick = _throttle((getedMessage) => {
-    console.log("%c Line:61 🍫 this.props.dataObj.children", "color:#93c0a4", getedMessage, this.props.dataObj.children);
+    console.log('%c Line:61 🍫 this.props.dataObj.children', 'color:#93c0a4', getedMessage, this.props.dataObj.children)
     if (getedMessage) {
       const clickItem = CITY_DATA.find((item) => item.id === getedMessage[0].cityName)
       if (this.props.dataObj.children && this.props.dataObj.children.length) {
@@ -1012,14 +1039,21 @@ class CityTraffic extends Component {
           ifHideMore={!this.props.dataObj.url}
         />
 
-        <View onPress={(e) => {
-          // e.preventDefault()
-        }} style={styles.container}>
+        <View
+          onPress={(e) => {
+            // e.preventDefault()
+          }}
+          style={styles.container}
+        >
           <WebView
             // 方法 A: 直接使用 require (iOS/Android 都适用，但 Android 需要配置)
             // 环境区分
             // source={__DEV__ ? require('./cityTraffic.html') : { uri: 'file:///android_asset/cityTraffic.html' }}
-            source={__DEV__ ? require('~/../android/app/src/main/assets/cityTraffic.html') : { uri: 'file:///android_asset/cityTraffic.html' }}
+            source={
+              __DEV__
+                ? require('~/../android/app/src/main/assets/cityTraffic.html')
+                : { uri: 'file:///android_asset/cityTraffic.html' }
+            }
             // 允许
             nestedScrollEnabled={true}
             // 注入js的postmessage通信代码(必须加入否则onMessage监听不到h5页面发来的message)
@@ -1085,13 +1119,13 @@ class CityTraffic extends Component {
         `}
             // 消息监听
             onMessage={(event) => {
-              console.log("%c Line:81 🥛 onMessage event", "color:#ed9ec7", event,);
+              console.log('%c Line:81 🥛 onMessage event', 'color:#ed9ec7', event)
               this.handleCityClick(event.nativeEvent.data ? JSON.parse(event.nativeEvent.data) : '')
             }}
           />
         </View>
       </View>
-    );
+    )
   }
 }
 
@@ -1115,13 +1149,12 @@ const styles = StyleSheet.create({
   jx_bg: {
     width: '100%',
     height: undefined, // 高度由宽高比决定
-    position: 'relative'
+    position: 'relative',
   },
-});
+})
 
-export default CityTraffic;
+export default CityTraffic
 ```
-
 
 [react-native-webview官网](https://github.com/react-native-webview/react-native-webview)
 
@@ -1170,15 +1203,15 @@ yarn add @react-native-community/geolocation
 [getcurrentposition](https://github.com/michalchudziak/react-native-geolocation?tab=readme-ov-file#getcurrentposition)
 
 ```js
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from '@react-native-community/geolocation'
 
 Geolocation.getCurrentPosition(
-  info => console.log(info),
-  error => console.log(error),
+  (info) => console.log(info),
+  (error) => console.log(error),
   {
-    timeout: 10000
-  }
-);
+    timeout: 10000,
+  },
+)
 ```
 
 #### Camera
@@ -1222,7 +1255,6 @@ this.props.route.params.KEY
 ```
 
 #### 矢量图标库
-
 
 [react-native-vector-icons官网](https://github.com/oblador/react-native-vector-icons)
 
