@@ -3727,3 +3727,90 @@ export default function (titleValue) {
   )
 </script>
 ```
+
+## 封装hook复用
+
+**useRoundId.ts**
+
+```ts
+import { ref } from 'vue'
+import { getGradeList, getClassListByGrade, getTermList } from '@/api/modules/schoolWork'
+import dayjs from 'dayjs'
+import { selElectiveRulePageList } from '@/api/modules/teacherEnd'
+
+export function useRoundId() {
+  const currentTerm = ref<any>({})
+  const roundId = ref<string>('')
+
+  const loadTermList = async () => {
+    try {
+      const res: any = await getTermList({ current: 1, size: 99999 })
+      // console.log("%c Line:161 🍋 res", "color:#465975", res);
+
+      if (res?.data?.records?.length) {
+      } else {
+      }
+    } catch (error) {}
+  }
+
+  const getTermRoundId = async () => {
+    const res: any = await selElectiveRulePageList({
+      current: 1,
+      size: 10,
+      termId: termId,
+      termIndex: termIndex,
+    })
+  }
+
+  return {
+    currentTerm,
+    roundId,
+    loadTermList,
+    getTermRoundId,
+  }
+}
+```
+
+**inde.vue**
+
+```vue
+<script setup lang="ts">
+  import { useRoundId } from '@/hooks/useRoundId'
+  const { currentTerm, roundId, loadTermList, getTermRoundId } = useRoundId()
+
+  console.log(currentTerm.value, roundId.value)
+</script>
+```
+
+## vue里使用模板
+
+**inde.vue**
+
+```vue
+<script setup lang="tsx">
+  const columns: any = [
+    {
+      label: '状态',
+      prop: 'status',
+      width: 100,
+      render: (scope: any) => {
+        return (
+          <ElSwitch
+            modelValue={scope.row.status}
+            active-value={1}
+            inactive-value={0}
+            onChange={(val: number) => handleStatusChange(scope.row, val)}
+          />
+        )
+      },
+    },
+    {
+      prop: 'operation',
+      label: '操作',
+      width: 180,
+      fixed: 'right',
+      slot: 'operation',
+    },
+  ]
+</script>
+```
