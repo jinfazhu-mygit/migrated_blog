@@ -1,1 +1,71 @@
-// place your custom styles here
+// ============ 正文阅读排版 ============
+.vp-page {
+
+  // 行内代码
+  :not(pre)>code {
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    line-height: 1.6;
+  }
+
+  // 引用块
+  blockquote {
+    border-radius: 0 6px 6px 0;
+    background: var(--vp-c-bg-alt);
+  }
+}
+
+.vp-article-excerpt {
+  max-height: 174px;
+}
+
+// ============ 代码块 ============
+div[class*="language-"],
+.vp-code-block {
+  border-radius: 10px;
+}
+
+// ============ 文章列表卡片 ============
+.vp-article-wrapper {
+  margin-bottom: 1rem; // 默认 1.25rem，卡片更紧凑
+}
+
+.vp-article-item {
+  border-radius: 12px;
+  padding: 1.1rem 1.5rem;
+  transition:
+    background 0.25s,
+    box-shadow 0.25s,
+    transform 0.25s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--vp-c-shadow);
+  }
+}
+
+.vp-article-title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+// ============ 导航栏：滚动后加分隔线 ============
+.vp-navbar {
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+// ============ 移动端微调 ============
+@media (max-width: 719px) {
+  .vp-page {
+    line-height: 1.75;
+  }
+
+  .vp-article-item {
+    padding: 0.9rem 1.1rem;
+  }
+}
+
+// 修复 one-light 主题部分 token 为 white 导致浅色模式不可见
+html:not([data-theme='dark']) .shiki span[style*='--shiki-light:white'] {
+  color: #e45649; // one-light 的标签红，也可以用 #383A42（默认前景灰）
+}

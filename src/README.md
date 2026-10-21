@@ -38,7 +38,7 @@ projects:
     desc: 自定义详细介绍
     link: https://你的自定义链接
 
-footer: 相关配置文档请见 [博客主页](https://theme-hope.vuejs.press/zh/guide/blog/home.html)。
+footer: 相关配置文档请见：https://theme-hope.vuejs.press/zh/guide/blog/home.html
 ---
 
 <!-- 这是一个博客主页的案例。

@@ -1,1 +1,47 @@
-// you can change colors here
+// ============ 布局尺寸 ============
+// 默认值见 node_modules/vuepress-theme-hope/templates/palette/layout.scss
+$navbar-height: 3.5rem; // 默认 3.75rem，收窄一点更利落
+$content-width: 820px; // 默认 780px，中文一行约 40 字更舒展
+$home-page-width: 1180px; // 默认 1160px
+$sidebar-width: 17rem; // 默认 18rem
+
+// ============ 字体 ============
+// 关键：默认字体栈没有中文字体，中文会 fallback 到系统默认，字形和字重都不统一
+$vp-font: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif';
+$vp-font-heading: $vp-font;
+$vp-font-mono: '"JetBrains Mono", "Fira Code", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", "Courier New", monospace';
+
+// ============ 配色（每项是 light / dark 两套） ============
+// 默认值见 node_modules/vuepress-theme-hope/templates/palette/color.scss
+$vp-c-bg: (
+  light: #ffffff,
+  dark: #16161a,
+);
+$vp-c-bg-alt: (
+  light: #f7f8fa,
+  dark: #1b1b21,
+);
+$vp-c-bg-elv: (
+  light: #ffffff,
+  dark: #212128,
+);
+$vp-c-text: (
+  light: #2f3336,
+  dark: rgb(235 235 245 / 88%),
+);
+$vp-c-border: (
+  light: #dfe2e6,
+  dark: #383b44,
+);
+$vp-c-divider: (
+  light: #ebedf0,
+  dark: #2a2c34,
+);
+$vp-c-control: (
+  light: rgb(100 116 139 / 10%),
+  dark: rgb(101 117 133 / 14%),
+);
+$vp-c-control-hover: (
+  light: rgb(100 116 139 / 16%),
+  dark: rgb(101 117 133 / 22%),
+);

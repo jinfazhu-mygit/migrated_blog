@@ -1,7 +1,7 @@
 ---
-title: 'Vue3-TypeScript'
+title: "Vue3-TypeScript"
 date: 2023-4-28 22:15:00
-permalink: '/posts/blogs/Vue3-TypeScript'
+permalink: "/posts/blogs/Vue3-TypeScript"
 isTimeLine: true
 # sidebar: auto
 # sidebarDepth: 1
@@ -62,21 +62,21 @@ M：数据 V：视图 VM：实现数据绑定和视图事件的监听
       // data对应的数据为函数返回一个对象
       data() {
         return {
-          title: 'Hello World',
-          list: ['424535', '35t54', 'u7676', '76454'],
+          title: "Hello World",
+          list: ["424535", "35t54", "u7676", "76454"],
           count: 0,
-        }
+        };
       },
       methods: {
         increment() {
-          this.count++
+          this.count++;
         },
         decrement() {
-          this.count--
+          this.count--;
         },
       },
-    })
-    app.mount('#app')
+    });
+    app.mount("#app");
   </script>
 </body>
 ```
@@ -124,25 +124,25 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        firstName: 'zzz',
-        lastName: 'jf',
+        firstName: "zzz",
+        lastName: "jf",
         score: 80,
-        content: 'this is a content',
-      }
+        content: "this is a content",
+      };
     },
     computed: {
       fullName() {
-        return this.firstName + ' ' + this.lastName
+        return this.firstName + " " + this.lastName;
       },
       scoreLevel() {
-        return this.score >= 60 ? '及格' : '不及格'
+        return this.score >= 60 ? "及格" : "不及格";
       },
       reverseContent() {
-        return this.content.split(' ').reverse().join(' ')
+        return this.content.split(" ").reverse().join(" ");
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -167,34 +167,34 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        firstName: 'zzz',
-        lastName: 'jf',
-      }
+        firstName: "zzz",
+        lastName: "jf",
+      };
     },
     computed: {
       // 语法糖函数式写法
       fullName() {
-        return this.firstName + ' ' + this.lastName
+        return this.firstName + " " + this.lastName;
       },
       // set,get对象写法
       fullName: {
         get() {
-          return this.firstName + ' ' + this.lastName
+          return this.firstName + " " + this.lastName;
         },
         set(val) {
-          const vals = val.split(' ')
-          this.firstName = vals[0]
-          this.lastName = vals[1]
+          const vals = val.split(" ");
+          this.firstName = vals[0];
+          this.lastName = vals[1];
         },
       },
     },
     methods: {
       changeName() {
-        this.fullName = 'zhu sdsffew'
+        this.fullName = "zhu sdsffew";
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -213,31 +213,31 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello Vue3',
-        info: { name: 'zjf', age: 23 },
-      }
+        message: "Hello Vue3",
+        info: { name: "zjf", age: 23 },
+      };
     },
     methods: {
       changeMessage() {
-        this.message = 'Hello zjf'
-        this.info = { name: 'why' }
+        this.message = "Hello zjf";
+        this.info = { name: "why" };
       },
     },
     watch: {
       // 1.观察的数据函数默认有两个参数newValue, oldValue
       message(newValue, oldValue) {
-        console.log('message数据发生了变化', newValue, oldValue)
+        console.log("message数据发生了变化", newValue, oldValue);
       },
       info(newValue, oldValue) {
         // 2.如果数据是对象类型，拿到的是Proxy代理对象
         // console.log('info发生了变化', newValue, oldValue)
         // 3.获取原始对象
         // console.log({ ...newValue }, { ...oldValue }) // 不是原始的对象
-        console.log(Vue.toRaw(newValue), Vue.toRaw(oldValue))
+        console.log(Vue.toRaw(newValue), Vue.toRaw(oldValue));
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -254,15 +254,15 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        info: { name: 'zjf', age: 23 },
-      }
+        info: { name: "zjf", age: 23 },
+      };
     },
     methods: {
       changeInfo() {
         // 直接修改对象watch能监听到
         // this.info = { name: 'why' }
         // 如果直接修改的是对象的某个属性，普通写法监听不到
-        this.info.name = 'zzz'
+        this.info.name = "zzz";
       },
     },
     watch: {
@@ -273,8 +273,8 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
       // 深度监听
       info: {
         handler(newValue, oldValue) {
-          console.log(Vue.toRaw(newValue), Vue.toRaw(oldValue))
-          console.log(newValue === oldValue) // true
+          console.log(Vue.toRaw(newValue), Vue.toRaw(oldValue));
+          console.log(newValue === oldValue); // true
         },
         // 进行深度监听
         deep: true,
@@ -282,12 +282,12 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
         immediate: true, // undefined => { }
       },
       // 直接监听对象的某个属性写法(了解)
-      'info.name': function (newValue, oldValue) {
-        console.log(newValue, oldValue)
+      "info.name": function (newValue, oldValue) {
+        console.log(newValue, oldValue);
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -308,25 +308,25 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello message',
-      }
+        message: "Hello message",
+      };
     },
     methods: {
       changeMessage() {
-        this.message = 'Hello Vue3'
+        this.message = "Hello Vue3";
       },
     },
     created() {
       this.$watch(
-        'message',
+        "message",
         (newValue, oldValue) => {
-          console.log(newValue, oldValue)
+          console.log(newValue, oldValue);
         },
         { deep: true, immediate: true },
-      )
+      );
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -352,19 +352,19 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello Vue3',
+        message: "Hello Vue3",
         count: 100,
-        info: 'this is a content',
+        info: "this is a content",
         age: 20,
-      }
+      };
     },
     methods: {
       test(s) {
-        return 'aaa' + s
+        return "aaa" + s;
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -387,18 +387,18 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello Vue3',
+        message: "Hello Vue3",
         count: 100,
-      }
+      };
     },
     methods: {
       changeMessage() {
-        this.message = 'hello 111'
-        this.count = 200
+        this.message = "hello 111";
+        this.count = 200;
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -428,10 +428,10 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
     data() {
       return {
         content: `<span style="color: red;font-size: 30px;">hhh111</span>`,
-      }
+      };
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -483,14 +483,14 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
         {
           data() {
             return {
-              message: 'Hello Vue3',
-            }
+              message: "Hello Vue3",
+            };
           },
         },
         3000,
-      )
-      app.mount('#app')
-    }, 3000)
+      );
+      app.mount("#app");
+    }, 3000);
   </script>
 </body>
 ```
@@ -515,19 +515,19 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        name: 'zjf',
+        name: "zjf",
         age: 23,
         height: 1.8,
-      }
+      };
     },
     methods: {
       changeInfo() {
-        this.name = 'zzz'
+        this.name = "zzz";
         // this.age = 22
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -561,20 +561,20 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        imgUrl1: 'http://p1.music.126.net/5Eg9JmbMKaatFItNduaXhA==/109951168563614529.jpg',
-        imgUrl2: 'http://p1.music.126.net/cq95aHVsFRKnmF4EGS1PXw==/109951168563663637.jpg',
-        showImgUrl: 'http://p1.music.126.net/5Eg9JmbMKaatFItNduaXhA==/109951168563614529.jpg',
+        imgUrl1: "http://p1.music.126.net/5Eg9JmbMKaatFItNduaXhA==/109951168563614529.jpg",
+        imgUrl2: "http://p1.music.126.net/cq95aHVsFRKnmF4EGS1PXw==/109951168563663637.jpg",
+        showImgUrl: "http://p1.music.126.net/5Eg9JmbMKaatFItNduaXhA==/109951168563614529.jpg",
 
-        href: 'https://www.baidu.com',
-      }
+        href: "https://www.baidu.com",
+      };
     },
     methods: {
       changeImg() {
-        this.showImgUrl = this.showImgUrl === this.imgUrl1 ? this.imgUrl2 : this.imgUrl1
+        this.showImgUrl = this.showImgUrl === this.imgUrl1 ? this.imgUrl2 : this.imgUrl1;
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -618,21 +618,21 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
     const app = Vue.createApp({
       data() {
         return {
-          message: 'Hello Vue3',
-          classes: 'abc cba nba',
+          message: "Hello Vue3",
+          classes: "abc cba nba",
           isActive: false,
-        }
+        };
       },
       methods: {
         changeClass() {
-          this.isActive = !this.isActive
+          this.isActive = !this.isActive;
         },
         getClasses() {
-          return { zzz: true, mmm: true, nnn: true, lll: false }
+          return { zzz: true, mmm: true, nnn: true, lll: false };
         },
       },
-    })
-    app.mount('#app')
+    });
+    app.mount("#app");
   </script>
 </body>
 ```
@@ -656,20 +656,20 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
     const app = Vue.createApp({
       data() {
         return {
-          message: 'Hello Vue3',
-          fontColor: 'blue',
-          fontSize: '40px',
+          message: "Hello Vue3",
+          fontColor: "blue",
+          fontSize: "40px",
           objStyle: {
-            color: 'green',
-            fontSize: '50px',
+            color: "green",
+            fontSize: "50px",
           },
           objStyle1: {
             opacity: 0.6,
           },
-        }
+        };
       },
-    })
-    app.mount('#app')
+    });
+    app.mount("#app");
   </script>
 </body>
 ```
@@ -691,13 +691,13 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello Vue3',
-        name: 'title', // 动态添加title属性
-        qqq: 'class',
-      }
+        message: "Hello Vue3",
+        name: "title", // 动态添加title属性
+        qqq: "class",
+      };
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -723,15 +723,15 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello Vue3',
-        infos: { name: 'zzz', age: 23, height: 1.8 },
-        name: 'zjf',
+        message: "Hello Vue3",
+        infos: { name: "zzz", age: 23, height: 1.8 },
+        name: "zjf",
         age: 23,
         height: 1.8,
-      }
+      };
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -775,21 +775,21 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
     data() {
       return {
         counter: 0,
-      }
+      };
     },
     methods: {
       boxClick() {
-        console.log('box点击')
+        console.log("box点击");
       },
       increment() {
-        this.counter++
+        this.counter++;
       },
       onMouseMove() {
-        console.log('divMouseMove')
+        console.log("divMouseMove");
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -810,23 +810,23 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello Vue3',
+        message: "Hello Vue3",
         age: 23,
-      }
+      };
     },
     methods: {
       btnClick(e) {
-        console.log('btnClick', e)
+        console.log("btnClick", e);
       },
       btn2Click(name, age) {
-        console.log('btn2Click', name, age)
+        console.log("btn2Click", name, age);
       },
       btn3Click(name, age, e) {
-        console.log('btn3Click', name, age, e)
+        console.log("btn3Click", name, age, e);
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -875,26 +875,26 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello Vue3',
-      }
+        message: "Hello Vue3",
+      };
     },
     methods: {
       boxClick() {
-        console.log('boxClick')
+        console.log("boxClick");
       },
       btnClick(e) {
         // e.stopPropagation()
-        console.log('btnClick')
+        console.log("btnClick");
       },
       btn1Click() {
-        console.log('btn1Click')
+        console.log("btn1Click");
       },
       aClick() {
-        console.log('aClick')
+        console.log("aClick");
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -935,14 +935,14 @@ vue3源码里实现为：**对methods里的函数进行遍历，对每个函数�
     data() {
       return {
         info: {
-          name: 'zzz',
+          name: "zzz",
           age: 23,
         },
         showScore: true,
-      }
+      };
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -987,12 +987,12 @@ item是我们给每项元素起的一个别名，这个别名可以自定来定�
   const app = Vue.createApp({
     data() {
       return {
-        movies: ['zzz', 'xxx', 'ccc', 'vdse'],
-        info: { name: 'zzz', age: 23, height: 1.8 },
-      }
+        movies: ["zzz", "xxx", "ccc", "vdse"],
+        info: { name: "zzz", age: 23, height: 1.8 },
+      };
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -1079,21 +1079,21 @@ Vue事实上会对于有key和没有key会调用两个不同的方法；
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello Vue3',
-        username: 'zzzjf',
-        password: 'xxxxxxxxxx',
-      }
+        message: "Hello Vue3",
+        username: "zzzjf",
+        password: "xxxxxxxxxx",
+      };
     },
     methods: {
       inputValue(e) {
-        this.message = e.target.value
+        this.message = e.target.value;
       },
       loginClick() {
         // 提交this.username,this.password
       },
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -1220,16 +1220,16 @@ v-model的原理其实是背后有两个操作：
   const app = Vue.createApp({
     data() {
       return {
-        content: '',
+        content: "",
         isAgree: true,
         hobbies: [],
-        gender: 'male',
-        fruit: 'apple',
+        gender: "male",
+        fruit: "apple",
         fruits: [],
-      }
+      };
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -1277,15 +1277,15 @@ v-model的原理其实是背后有两个操作：
   const app = Vue.createApp({
     data() {
       return {
-        message: 'Hello Vue3',
+        message: "Hello Vue3",
         counter: 0,
         counter2: 0,
-        content: '',
-        moreContent: '',
-      }
+        content: "",
+        moreContent: "",
+      };
     },
-  })
-  app.mount('#app')
+  });
+  app.mount("#app");
 </script>
 ```
 
@@ -1331,19 +1331,19 @@ v-model的原理其实是背后有两个操作：
   const app = Vue.createApp({
     data() {
       return {
-        title: 'title content',
-        content: 'vvfgdfgsfwe',
-      }
+        title: "title content",
+        content: "vvfgdfgsfwe",
+      };
     },
-  })
+  });
 
   // 4.创建组件并
   // 5.注册为全局组件
-  app.component('child-cpn', {
+  app.component("child-cpn", {
     template: `#childCpn`,
-  })
+  });
   // 6.最后挂载顺序要对
-  app.mount('#app')
+  app.mount("#app");
 </script>
 ```
 
@@ -1390,13 +1390,13 @@ v-model的原理其实是背后有两个操作：
 </template>
 
 <script>
-  import PersonInfo from './components/PersonInfo.vue'
+  import PersonInfo from "./components/PersonInfo.vue";
 
   export default {
     components: {
       PersonInfo,
     },
-  }
+  };
 </script>
 ```
 
@@ -1442,19 +1442,19 @@ v-model的原理其实是背后有两个操作：
       friend: {
         type: Object,
         default() {
-          return { name: 'zzz', age: 23 }
+          return { name: "zzz", age: 23 };
         },
       },
       hobbies: {
         type: Array,
-        default: () => ['跑步', '健身'],
+        default: () => ["跑步", "健身"],
       },
       showMessage: {
         type: String,
-        default: 'show message',
+        default: "show message",
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -1476,13 +1476,13 @@ v-model的原理其实是背后有两个操作：
 </template>
 
 <script>
-  import PersonInfo1 from './components/PersonInfo1.vue'
+  import PersonInfo1 from "./components/PersonInfo1.vue";
 
   export default {
     components: {
       PersonInfo1,
     },
-  }
+  };
 </script>
 ```
 
@@ -1522,7 +1522,7 @@ v-model的原理其实是背后有两个操作：
         default: 1.8,
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -1540,7 +1540,7 @@ v-model的原理其实是背后有两个操作：
 </template>
 
 <script>
-  import AddCount from './AddCount.vue'
+  import AddCount from "./AddCount.vue";
   export default {
     components: {
       AddCount,
@@ -1548,14 +1548,14 @@ v-model的原理其实是背后有两个操作：
     data() {
       return {
         counter: 0,
-      }
+      };
     },
     methods: {
       addCount(count) {
-        this.counter += count
+        this.counter += count;
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -1578,16 +1578,16 @@ v-model的原理其实是背后有两个操作：
     emits: {
       add: function (count) {
         if (count <= 10) {
-          return true
-        } else return false
+          return true;
+        } else return false;
       },
     },
     methods: {
       addBtnClick(count) {
-        this.$emit('add', count)
+        this.$emit("add", count);
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -1606,16 +1606,16 @@ v-model的原理其实是背后有两个操作：
 </template>
 
 <script>
-  import { computed } from 'vue'
-  import Home from './Home.vue'
+  import { computed } from "vue";
+  import Home from "./Home.vue";
   export default {
     components: {
       Home,
     },
     data() {
       return {
-        message: 'Hello Vue',
-      }
+        message: "Hello Vue",
+      };
     },
     // provide: {
     //   name: 'zjf',
@@ -1624,15 +1624,15 @@ v-model的原理其实是背后有两个操作：
     // 使用provide函数式写法传递data里的数据
     provide() {
       return {
-        name: 'zjf',
+        name: "zjf",
         age: 23,
         // 借用computed函数来传递最新的响应式data数据,返回的是ComputedRef，使用时需通过.value解包
         message: computed(() => {
-          return this.message
+          return this.message;
         }),
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -1646,13 +1646,13 @@ v-model的原理其实是背后有两个操作：
 </template>
 
 <script>
-  import HomeBanner from './HomeBanner.vue'
+  import HomeBanner from "./HomeBanner.vue";
 
   export default {
     components: {
       HomeBanner,
     },
-  }
+  };
 </script>
 ```
 
@@ -1669,8 +1669,8 @@ v-model的原理其实是背后有两个操作：
 
 <script>
   export default {
-    inject: ['name', 'age', 'message'],
-  }
+    inject: ["name", "age", "message"],
+  };
 </script>
 ```
 
@@ -1693,19 +1693,19 @@ App.vue
 </template>
 
 <script>
-  import Child1 from './Child1.vue'
-  import Child2 from './Child2.vue'
+  import Child1 from "./Child1.vue";
+  import Child2 from "./Child2.vue";
   export default {
     data() {
       return {
         child2Show: true,
-      }
+      };
     },
     components: {
       Child1,
       Child2,
     },
-  }
+  };
 </script>
 ```
 
@@ -1720,14 +1720,14 @@ App.vue
 </template>
 
 <script>
-  import eventBus from './lib/event-bus'
+  import eventBus from "./lib/event-bus";
   export default {
     methods: {
       child1BtnClick() {
-        eventBus.emit('child1BtnClick', 111, 'aaa', 222)
+        eventBus.emit("child1BtnClick", 111, "aaa", 222);
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -1741,22 +1741,22 @@ App.vue
 </template>
 
 <script>
-  import eventBus from './lib/event-bus'
+  import eventBus from "./lib/event-bus";
   export default {
     methods: {
       child1BtnClickHandler() {
-        console.log('Child2组件里监听到Child1组件的按钮点击了')
+        console.log("Child2组件里监听到Child1组件的按钮点击了");
       },
     },
     // 组件初始化时开启监听事件
     created() {
-      eventBus.on('child1BtnClick', this.child1BtnClickHandler)
+      eventBus.on("child1BtnClick", this.child1BtnClickHandler);
     },
     // 一定要针对事件名和相应的回调函数进行监听移除!
     unmounted() {
-      eventBus.off('child1BtnClick', this.child1BtnClickHandler)
+      eventBus.off("child1BtnClick", this.child1BtnClickHandler);
     },
-  }
+  };
 </script>
 ```
 
@@ -1804,8 +1804,8 @@ vue支持在input节点上使用v-model，也支持在组件上使用v-model；
 </template>
 
 <script>
-  import Counter from './Counter'
-  import Counter2 from './Counter2.vue'
+  import Counter from "./Counter";
+  import Counter2 from "./Counter2.vue";
   export default {
     components: {
       Counter,
@@ -1813,13 +1813,13 @@ vue支持在input节点上使用v-model，也支持在组件上使用v-model；
     },
     data() {
       return {
-        message: 'Hello Vue3',
-        appData: 'data app',
+        message: "Hello Vue3",
+        appData: "data app",
 
-        text: '啦啦啦',
-      }
+        text: "啦啦啦",
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -1835,14 +1835,14 @@ vue支持在input节点上使用v-model，也支持在组件上使用v-model；
 
 <script>
   export default {
-    props: ['modelValue'],
-    emits: ['update:modelValue'],
+    props: ["modelValue"],
+    emits: ["update:modelValue"],
     methods: {
       btnClick() {
-        this.$emit('update:modelValue', 'changed data')
+        this.$emit("update:modelValue", "changed data");
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -1860,17 +1860,17 @@ vue支持在input节点上使用v-model，也支持在组件上使用v-model；
 
 <script>
   export default {
-    props: ['appD', 'hhh'],
-    emits: ['update:appD', 'update:hhh'],
+    props: ["appD", "hhh"],
+    emits: ["update:appD", "update:hhh"],
     methods: {
       btnClick() {
-        this.$emit('update:appD', 'changed data')
+        this.$emit("update:appD", "changed data");
       },
       btnClick2() {
-        this.$emit('update:hhh', '嘻嘻嘻')
+        this.$emit("update:hhh", "嘻嘻嘻");
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -1940,10 +1940,10 @@ vscode插件：vetur(不推荐)，volar
 ### main.js
 
 ```js
-import App from './components/App.vue'
+import App from "./components/App.vue";
 // 脚手架中默认vue版本(.vue文件)：由runtime, vue-loader完成template的compile编译过程来创建VNode(createVNode)
 // 普通模板(对象，如下所示)：需要使用源码里的vue.esm-bundler: runtime + compile完成template的编译过程来创建VNode(createVNode)
-import { createApp } from 'vue'
+import { createApp } from "vue";
 // import { createApp } from 'vue/dist/vue.esm-bundler'
 
 // const App = {
@@ -1953,7 +1953,7 @@ import { createApp } from 'vue'
 //   }
 // }
 
-createApp(App).mount('#app')
+createApp(App).mount("#app");
 ```
 
 ### .vue文件
@@ -1970,7 +1970,7 @@ createApp(App).mount('#app')
 </template>
 
 <script>
-  import ProductItem from './components/ProductItem.vue'
+  import ProductItem from "./components/ProductItem.vue";
 
   export default {
     components: {
@@ -1978,10 +1978,10 @@ createApp(App).mount('#app')
     },
     data() {
       return {
-        title: 'data标题111',
-      }
+        title: "data标题111",
+      };
     },
-  }
+  };
 </script>
 
 <style lang="css" scoped>
@@ -2008,18 +2008,18 @@ createApp(App).mount('#app')
 ### vue.config.js(对webpack.config.js的拓展补充)
 
 ```js
-const { defineConfig } = require('@vue/cli-service')
+const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: {
     resolve: {
       alias: {
-        components: '@/components',
-        utils: '@/utils',
+        components: "@/components",
+        utils: "@/utils",
       },
     },
   },
-})
+});
 ```
 
 ### jsconfig.json(供vscode读取，提供更好的代码提示)
@@ -2079,12 +2079,12 @@ npm init vue@latest
 </template>
 
 <script>
-  import ShowMessage from './ShowMessage.vue'
+  import ShowMessage from "./ShowMessage.vue";
   export default {
     components: {
       ShowMessage,
     },
-  }
+  };
 </script>
 ```
 
@@ -2108,10 +2108,10 @@ npm init vue@latest
     props: {
       title: {
         type: String,
-        default: '',
+        default: "",
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -2156,24 +2156,24 @@ npm init vue@latest
 </template>
 
 <script>
-  import NavBar from './NavBar.vue'
+  import NavBar from "./NavBar.vue";
   export default {
     components: {
       NavBar,
     },
     data() {
       return {
-        slotPosition: 'left',
-        leftBtnText: 'hh123',
-      }
+        slotPosition: "left",
+        leftBtnText: "hh123",
+      };
     },
-  }
+  };
 </script>
 ```
 
 **子组件**
 
-具名插槽顾名思义就是**给插槽起一个名字**，**<slot> 元素有一个特殊的 attribute：name**；
+具名插槽顾名思义就是**给插槽起一个名字**，**`<slot>` 元素有一个特殊的 attribute：name**；
 
 一个不带 name 的slot，会带有隐含的名字 default；
 
@@ -2195,7 +2195,7 @@ npm init vue@latest
 </template>
 
 <script>
-  export default {}
+  export default {};
 </script>
 ```
 
@@ -2244,36 +2244,36 @@ npm init vue@latest
 </template>
 
 <script>
-  import ChildCpn from './ChildCpn.vue'
+  import ChildCpn from "./ChildCpn.vue";
   export default {
     components: {
       ChildCpn,
     },
     data() {
       return {
-        message: 'Hello World',
-      }
+        message: "Hello World",
+      };
     },
     methods: {
       changeMessage() {
         // 1.可获取节点
-        console.log(this.$refs.title)
-        this.message = 'Hello vvvv'
+        console.log(this.$refs.title);
+        this.message = "Hello vvvv";
         // 2.可获取组件实例，拿到两个子组件实例(代理对象)
-        console.log(this.$refs.childCpn1)
-        console.log(this.$refs.childCpn2)
+        console.log(this.$refs.childCpn1);
+        console.log(this.$refs.childCpn2);
         // 2.1.可通过$refs拿到子组件实例，即可实现父组件里调用子组件的方法
-        this.$refs.childCpn1.bannerClick()
+        this.$refs.childCpn1.bannerClick();
         // 2.2.可通过$refs拿到子组件实例，可拿到组件的模板
-        console.log(this.$refs.childCpn1.$el)
+        console.log(this.$refs.childCpn1.$el);
         // 2.3拿到组件的模板,如果有多个根(开发中不推荐一个组件有多个根)
         // console.log(this.$refs.childCpn1.$el.nextSibling)
         // 3.组件实例还有两个属性(了解)
-        console.log(this.$parent) // 获取父组件
-        console.log(this.$root) // 获取当前根组件
+        console.log(this.$parent); // 获取父组件
+        console.log(this.$root); // 获取当前根组件
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -2291,14 +2291,14 @@ npm init vue@latest
   export default {
     methods: {
       bannerClick() {
-        console.log('子组件方法调用')
+        console.log("子组件方法调用");
       },
     },
-  }
+  };
 </script>
 ```
 
-## 动态组件(<component :is=></component>)
+## 动态组件(`<component :is=></component>`)
 
 注意：**composition api中只能通过引入的名称进行显示，:is不能使用字符串**，**所以使用动态组件建议结合options api和composition api进行书写**
 
@@ -2323,9 +2323,9 @@ npm init vue@latest
 </template>
 
 <script setup>
-  import Home from './views/Home.vue'
-  import About from './views/About.vue'
-  import Category from './views/Category.vue'
+  import Home from "./views/Home.vue";
+  import About from "./views/About.vue";
+  import Category from "./views/Category.vue";
 </script>
 ```
 
@@ -2357,9 +2357,9 @@ npm init vue@latest
 </template>
 
 <script>
-  import Home from './views/Home.vue'
-  import About from './views/About.vue'
-  import Category from './views/Category.vue'
+  import Home from "./views/Home.vue";
+  import About from "./views/About.vue";
+  import Category from "./views/Category.vue";
   export default {
     components: {
       Home,
@@ -2368,16 +2368,16 @@ npm init vue@latest
     },
     data() {
       return {
-        tabs: ['home', 'about', 'category'],
+        tabs: ["home", "about", "category"],
         activeIndex: 0,
-      }
+      };
     },
     methods: {
       btnClick(index) {
-        this.activeIndex = index
+        this.activeIndex = index;
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -2445,9 +2445,9 @@ export default {
 </template>
 
 <script>
-  import Home from './views/Home.vue'
-  import About from './views/About.vue'
-  import Category from './views/Category.vue'
+  import Home from "./views/Home.vue";
+  import About from "./views/About.vue";
+  import Category from "./views/Category.vue";
   export default {
     components: {
       Home,
@@ -2456,16 +2456,16 @@ export default {
     },
     data() {
       return {
-        tabs: ['home', 'about', 'category'],
+        tabs: ["home", "about", "category"],
         activeIndex: 0,
-      }
+      };
     },
     methods: {
       btnClick(index) {
-        this.activeIndex = index
+        this.activeIndex = index;
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -2480,22 +2480,22 @@ export default {
 <script>
   export default {
     // keep-alive对应的筛选name
-    name: 'home',
+    name: "home",
     created() {
-      console.log('home created')
+      console.log("home created");
     },
     unmounted() {
-      console.log('home unmounted')
+      console.log("home unmounted");
     },
     // 对于keep-alive包含的组件，由于被缓存，
     // 再次切换到该组件时不会触发created,mounted，这时可通过activated和deactivated来判断缓存组件的切换和展示
     activated() {
-      console.log('home activated')
+      console.log("home activated");
     },
     deactivated() {
-      console.log('home deactivated')
+      console.log("home deactivated");
     },
-  }
+  };
 </script>
 ```
 
@@ -2520,14 +2520,14 @@ export default {
 ```vue
 <script>
   // 1.
-  import { defineAsyncComponent } from 'vue'
+  import { defineAsyncComponent } from "vue";
 
-  import Home from './views/Home.vue'
+  import Home from "./views/Home.vue";
   // import About from './views/About.vue'
   // import Category from './views/Category.vue'
   // 2.
-  const AsyncAbout = defineAsyncComponent(() => import('./views/About.vue'))
-  const AsyncCategory = defineAsyncComponent(() => import('./views/Category.vue'))
+  const AsyncAbout = defineAsyncComponent(() => import("./views/About.vue"));
+  const AsyncCategory = defineAsyncComponent(() => import("./views/Category.vue"));
 
   export default {
     components: {
@@ -2538,16 +2538,16 @@ export default {
     },
     data() {
       return {
-        tabs: ['home', 'about', 'category'],
+        tabs: ["home", "about", "category"],
         activeIndex: 0,
-      }
+      };
     },
     methods: {
       btnClick(index) {
-        this.activeIndex = index
+        this.activeIndex = index;
       },
     },
-  }
+  };
 </script>
 ```
 
@@ -2615,8 +2615,8 @@ props非常好理解，它其实就是**父组件传递过来的属性会被放�
 </template>
 
 <script>
-  import { ref } from 'vue'
-  import useCounter from './hooks/useCounter'
+  import { ref } from "vue";
+  import useCounter from "./hooks/useCounter";
 
   export default {
     setup() {
@@ -2631,38 +2631,38 @@ props非常好理解，它其实就是**父组件传递过来的属性会被放�
       // }
 
       // 直接导入封装好的逻辑函数
-      const { counter, increment, decrement } = useCounter()
+      const { counter, increment, decrement } = useCounter();
 
       // 导出与counter相关的数据和函数
       return {
         counter,
         increment,
         decrement,
-      }
+      };
 
       // 简便写法
-      return { ...useCounter() }
+      return { ...useCounter() };
     },
-  }
+  };
 </script>
 ```
 
 **/hooks/useCounter.js**
 
 ```js
-import { ref } from 'vue'
+import { ref } from "vue";
 
 // counter逻辑放一起后导出使用
 export default function useCounter() {
-  let counter = ref(0)
+  let counter = ref(0);
   const increment = () => {
-    counter.value++
-  }
+    counter.value++;
+  };
   const decrement = () => {
-    counter.value--
-  }
+    counter.value--;
+  };
 
-  return { counter, increment, decrement }
+  return { counter, increment, decrement };
 }
 ```
 
@@ -2717,34 +2717,34 @@ setup函数调用时没有绑定this
 </template>
 
 <script>
-  import { reactive } from 'vue'
-  import { ref } from 'vue'
+  import { reactive } from "vue";
+  import { ref } from "vue";
 
   export default {
     setup() {
       // 定义普通数据(非响应式)
-      let message = 'Hello Vue3'
+      let message = "Hello Vue3";
       function changeMessage() {
-        message = 'changed message'
+        message = "changed message";
       }
 
       // 1.使用reactive定义响应式数据(复杂数据类型)
       let account = reactive({
-        username: 'zjf',
-        password: 'zzzz',
-      })
+        username: "zjf",
+        password: "zzzz",
+      });
       function changeUserInfo() {
-        account.username = 'zzzx'
-        account.password = 'qqqqqq'
+        account.username = "zzzx";
+        account.password = "qqqqqq";
       }
 
       // 2.ref函数，定义简单类型的响应式数据(也可以定义复杂数据类型)
-      let counter = ref(0) // 返回一个ref对象
+      let counter = ref(0); // 返回一个ref对象
       const increment = () => {
         // 注意需要解包操作数据
-        counter.value++
-      }
-      const info = { counter }
+        counter.value++;
+      };
+      const info = { counter };
 
       // 必须返回所有定义的数据，才能使用
       return {
@@ -2755,9 +2755,9 @@ setup函数调用时没有绑定this
         counter,
         increment,
         info,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -2790,35 +2790,35 @@ setup函数调用时没有绑定this
 </template>
 
 <script>
-  import { onMounted, reactive, ref } from 'vue'
+  import { onMounted, reactive, ref } from "vue";
   export default {
     setup() {
       // 定义响应式数据
       // ref也可以定义响应式的复杂类型数据
-      const info = ref({ name: 'zjf' })
+      const info = ref({ name: "zjf" });
 
       // 1.reactive的应用场景
       // 条件一：reactive应用于本地的数据(必须是复杂数据类型)
       // 条件二：多个数据之间是有关系/联系的(联合的数据，组织在一起有特定的作用)
       const account = reactive({
-        username: 'zzz',
-        password: '11122333',
-      })
+        username: "zzz",
+        password: "11122333",
+      });
 
       // 2.ref应用场景
       // 2.1本地的一些简单数据
-      const username = ref('zjf')
-      const password = ref('333444')
-      const message = ref('Hello Vue3')
+      const username = ref("zjf");
+      const password = ref("333444");
+      const message = ref("Hello Vue3");
 
       // 2.2定义从网络中获取的数据
-      const bookList = ref([])
+      const bookList = ref([]);
 
       onMounted(() => {
-        const resBooks = ['第七天', '活着', '文城']
+        const resBooks = ["第七天", "活着", "文城"];
         // ref包裹返回的对象有.value属性，因此会比reactive数据赋值是具有更高的性能
-        bookList.value = resBooks
-      })
+        bookList.value = resBooks;
+      });
 
       return {
         info,
@@ -2827,9 +2827,9 @@ setup函数调用时没有绑定this
         password,
         message,
         bookList,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -2869,8 +2869,8 @@ readonly会**返回原始对象的只读代理**（也就是它依然是一个Pr
 </template>
 
 <script>
-  import ChangeInfo from './ChangeInfo.vue'
-  import { reactive, readonly } from 'vue'
+  import ChangeInfo from "./ChangeInfo.vue";
+  import { reactive, readonly } from "vue";
 
   export default {
     components: {
@@ -2878,27 +2878,27 @@ readonly会**返回原始对象的只读代理**（也就是它依然是一个Pr
     },
     setup() {
       const info = reactive({
-        name: 'zjf',
+        name: "zjf",
         age: 23,
-      })
+      });
       const changeInfo = (payload) => {
-        info.name = payload
-      }
+        info.name = payload;
+      };
 
       // 创建info的readonly对象
-      const roInfo = readonly(info)
+      const roInfo = readonly(info);
       const roInfoChange = (payload) => {
-        info.name = payload
-      }
+        info.name = payload;
+      };
 
       return {
         info,
         changeInfo,
         roInfo,
         roInfoChange,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -2935,24 +2935,24 @@ readonly会**返回原始对象的只读代理**（也就是它依然是一个Pr
         default: () => ({}),
       },
     },
-    emits: ['changeInfo', 'roInfoChange'],
+    emits: ["changeInfo", "roInfoChange"],
     setup(props, context) {
       const changeInfoBtnClick = () => {
         // setup函数里不能使用this
         // this.$emit('changeInfo', 'zzz')
-        context.emit('changeInfo', 'zzz')
-      }
+        context.emit("changeInfo", "zzz");
+      };
 
       const roInfoChange = () => {
-        context.emit('roInfoChange', 'why')
-      }
+        context.emit("roInfoChange", "why");
+      };
 
       return {
         changeInfoBtnClick,
         roInfoChange,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -2997,29 +2997,29 @@ readonly会**返回原始对象的只读代理**（也就是它依然是一个Pr
 
 ```vue
 <script>
-  import { reactive, toRef, toRefs } from 'vue'
+  import { reactive, toRef, toRefs } from "vue";
 
   export default {
     setup() {
       const info = reactive({
-        name: 'zjf',
+        name: "zjf",
         age: 23,
         height: 0.8,
-      })
+      });
       // 直接结构拿到的name,age会失去响应式，使用toRefs使得解构出的name,age保持响应式
       // const { name, age } = info
-      const { name, age } = toRefs(info)
+      const { name, age } = toRefs(info);
       // 也可针对某一个属性独立出来使用，并保证其响应式
-      const height = toRef(info, 'height')
+      const height = toRef(info, "height");
 
       return {
         info,
         name,
         age,
         height,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -3036,8 +3036,8 @@ readonly会**返回原始对象的只读代理**（也就是它依然是一个Pr
 </template>
 
 <script>
-  import { onMounted, ref } from 'vue'
-  import ShowInfo from './ShowInfo.vue'
+  import { onMounted, ref } from "vue";
+  import ShowInfo from "./ShowInfo.vue";
 
   export default {
     // mounted() {
@@ -3049,28 +3049,28 @@ readonly会**返回原始对象的只读代理**（也就是它依然是一个Pr
     },
     setup() {
       // 对节点的使用
-      const titleRef = ref()
-      const btnRef = ref()
+      const titleRef = ref();
+      const btnRef = ref();
       // 对组件的使用
-      const showInfoRef = ref()
+      const showInfoRef = ref();
 
-      console.log(titleRef.value) // undefined
-      console.log(btnRef.value) // undefined
+      console.log(titleRef.value); // undefined
+      console.log(btnRef.value); // undefined
       onMounted(() => {
-        console.log(titleRef.value) // <h2>我是标题</h2>
-        console.log(btnRef.value) // <button>按钮</button>
+        console.log(titleRef.value); // <h2>我是标题</h2>
+        console.log(btnRef.value); // <button>按钮</button>
 
-        console.log(showInfoRef.value) // Proxy{ }
-        showInfoRef.value.showInfoFn()
-      })
+        console.log(showInfoRef.value); // Proxy{ }
+        showInfoRef.value.showInfoFn();
+      });
 
       return {
         titleRef,
         btnRef,
         showInfoRef,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -3090,38 +3090,38 @@ computed计算属性(常用的**对响应式数据的依赖，返回的也是响
 </template>
 
 <script>
-  import { computed, reactive, ref } from 'vue'
+  import { computed, reactive, ref } from "vue";
 
   export default {
     setup() {
       const names = reactive({
-        firstName: 'James',
-        lastName: 'Smith',
-      })
+        firstName: "James",
+        lastName: "Smith",
+      });
       // computed函数式写法
       const fullName = computed(() => {
-        return names.firstName + ' ' + names.lastName
-      })
+        return names.firstName + " " + names.lastName;
+      });
       // computed对象写法
       const fullname1 = computed({
         // computed返回的是一个ref对象，通过.value即可传到其对象的set函数的payload中
         set(payload) {
-          const nameArr = payload.split(' ')
-          names.firstName = nameArr[0]
-          names.lastName = nameArr[1]
+          const nameArr = payload.split(" ");
+          names.firstName = nameArr[0];
+          names.lastName = nameArr[1];
         },
         get() {
-          return names.firstName + ' ' + names.lastName
+          return names.firstName + " " + names.lastName;
         },
-      })
+      });
       const changeName = (payload) => {
-        fullname1.value = payload
-      }
+        fullname1.value = payload;
+      };
 
-      const score = ref(86)
+      const score = ref(86);
       const scoreLevel = computed(() => {
-        return score.value >= 60 ? '及格' : '不及格'
-      })
+        return score.value >= 60 ? "及格" : "不及格";
+      });
 
       return {
         names,
@@ -3130,9 +3130,9 @@ computed计算属性(常用的**对响应式数据的依赖，返回的也是响
         score,
         scoreLevel,
         changeName,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -3146,7 +3146,7 @@ computed计算属性(常用的**对响应式数据的依赖，返回的也是响
 </template>
 
 <script>
-  import { onMounted } from 'vue'
+  import { onMounted } from "vue";
 
   export default {
     // mounted() {
@@ -3159,13 +3159,13 @@ computed计算属性(常用的**对响应式数据的依赖，返回的也是响
     // }
     setup() {
       onMounted(() => {
-        console.log('mounted1')
-      })
+        console.log("mounted1");
+      });
       onMounted(() => {
-        console.log('mounted2')
-      })
+        console.log("mounted2");
+      });
     },
-  }
+  };
 </script>
 ```
 
@@ -3193,26 +3193,26 @@ computed计算属性(常用的**对响应式数据的依赖，返回的也是响
 </template>
 
 <script>
-  import { provide, ref } from 'vue'
-  import ShowInfo from './ShowInfo.vue'
+  import { provide, ref } from "vue";
+  import ShowInfo from "./ShowInfo.vue";
 
   export default {
     components: {
       ShowInfo,
     },
     setup() {
-      const name = ref('zjf')
-      const age = ref(23)
+      const name = ref("zjf");
+      const age = ref(23);
       // provide共享数据：provide(key, value)
-      provide('name', name)
-      provide('age', age)
+      provide("name", name);
+      provide("age", age);
 
       return {
         name,
         age,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -3226,25 +3226,25 @@ computed计算属性(常用的**对响应式数据的依赖，返回的也是响
 </template>
 
 <script>
-  import { inject } from 'vue'
+  import { inject } from "vue";
 
   export default {
     // 通过options拿到setup函数传来的provide时，目前需要通过.value进行解包
     // inject: ['name', 'age'],
     setup() {
       // inject通过key拿到相应的值
-      const name = inject('name')
-      const age = inject('age')
+      const name = inject("name");
+      const age = inject("age");
       // inject接收数据第二个参数可设置默认值，在未接收到相应的数据是会自动使用
-      const height = inject('height', 1.8)
+      const height = inject("height", 1.8);
 
       return {
         name,
         age,
         height,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -3270,53 +3270,53 @@ computed计算属性(常用的**对响应式数据的依赖，返回的也是响
 </template>
 
 <script>
-  import { reactive, ref, watch } from 'vue'
+  import { reactive, ref, watch } from "vue";
 
   export default {
     setup() {
       // 1.创建响应式数据
-      const message = ref('Hello Vue3')
+      const message = ref("Hello Vue3");
       const info = reactive({
-        name: 'zjf',
+        name: "zjf",
         age: 23,
         friend: {
-          name: 'zzz',
+          name: "zzz",
         },
-      })
+      });
 
       // 使用watch函数监听
       watch(message, (newValue, oldValue) => {
-        console.log(newValue, oldValue)
-      })
+        console.log(newValue, oldValue);
+      });
       // 默认会对复杂数据类型进行深度监听
       watch(
         info,
         (newValue, oldValue) => {
-          console.log(newValue, oldValue)
+          console.log(newValue, oldValue);
         },
         {
           immediate: true, // 初始化立即监听
         },
-      )
+      );
 
       // 侦听reactive数据变化后，获取普通对象
       watch(
         () => ({ ...info }),
         (newValue, oldValue) => {
-          console.log(newValue, oldValue) // 获取到的是info的原始对象，而且此时为浅层监听
+          console.log(newValue, oldValue); // 获取到的是info的原始对象，而且此时为浅层监听
         },
         {
           immediate: true,
           deep: true, // 手动改为深度监听
         },
-      )
+      );
 
       return {
         message,
         info,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -3362,41 +3362,41 @@ age changed'); } );
 </template>
 
 <script setup>
-  import { onMounted, ref, watch } from 'vue'
+  import { onMounted, ref, watch } from "vue";
 
   const props = defineProps({
     width: {
       type: String,
-      default: '100%',
+      default: "100%",
     },
     height: {
       type: String,
-      default: '100%',
+      default: "100%",
     },
     pieData: {
       type: Array,
       default: () => [],
     },
-  })
+  });
 
   // 推荐写法：() => props. ，直接使用props.监听父组件传来的响应式数据或异步数据，会出现监听不到的情况，具体原因请看上面的跳转连接
   watch(
     () => props.pieData,
     (newValue, oldValue) => {
-      console.log('pieData发生变化')
-      chartOperate(newValue)
+      console.log("pieData发生变化");
+      chartOperate(newValue);
     },
     {
       deep: true,
     },
-  )
-  let myChart = null
+  );
+  let myChart = null;
   function chartOperate(pieData = []) {
     if (!myChart) {
-      myChart = useEcharts(pieChartRef.value)
+      myChart = useEcharts(pieChartRef.value);
     }
-    const options = getOptions(pieData)
-    myChart.setOption(options)
+    const options = getOptions(pieData);
+    myChart.setOption(options);
   }
 </script>
 
@@ -3416,31 +3416,31 @@ age changed'); } );
 </template>
 
 <script>
-  import { ref, watchEffect } from 'vue'
+  import { ref, watchEffect } from "vue";
 
   export default {
     setup() {
-      const counter = ref(0)
-      const name = ref('zjf')
+      const counter = ref(0);
+      const name = ref("zjf");
 
       // 引入watchEffect函数默认会自动执行一次，
       // 并且watchEffect函数会自动收集其中用到的响应式对象，将其作为依赖(作为触发函数的条件)
       // watchEffect函数默认会返回一个stop，执行后将会停止该watch
       const stopWatch = watchEffect(() => {
-        console.log('-----', counter.value, name.value) // 收集到了counter依赖和，name依赖
-        console.log('++++++')
+        console.log("-----", counter.value, name.value); // 收集到了counter依赖和，name依赖
+        console.log("++++++");
 
         if (counter.value >= 8) {
-          stopWatch() // 关闭watchEffect函数监听
+          stopWatch(); // 关闭watchEffect函数监听
         }
-      })
+      });
 
       return {
         counter,
         name,
-      }
+      };
     },
-  }
+  };
 </script>
 ```
 
@@ -3455,19 +3455,19 @@ age changed'); } );
 useTitle hook的使用，返回ref
 
 ```js
-import { ref, watch } from 'vue'
+import { ref, watch } from "vue";
 
 export default function (titleValue) {
   // document.title = title
 
   // hooks常见优化写法
-  const title = ref(titleValue)
+  const title = ref(titleValue);
 
   watch(title, (newValue) => {
-    document.title = newValue
-  })
+    document.title = newValue;
+  });
 
-  return title
+  return title;
 }
 ```
 
@@ -3505,28 +3505,28 @@ export default function (titleValue) {
 <!-- 推荐script放在template上面 -->
 <script setup>
   // 1.所有编写在顶层中的代码，都可以直接在template中使用
-  import { onMounted, ref } from 'vue'
-  import ShowInfo from './ShowInfo.vue'
+  import { onMounted, ref } from "vue";
+  import ShowInfo from "./ShowInfo.vue";
   // 2.定义响应式数据
-  const message = ref('Hello Vue3')
+  const message = ref("Hello Vue3");
   // 3.定义函数
   // const changeMessage = () => {
   //   message.value = 'Hello setup script'
   // }
   function changeMessage() {
-    message.value = 'Hello setup script'
+    message.value = "Hello setup script";
   }
 
   // 接收子组件emit事件
   function infoBtnClick(payload) {
-    console.log(payload)
+    console.log(payload);
   }
 
   // 4.获取子组件实例，父组件调用子组件方法
-  const showInfoRef = ref()
+  const showInfoRef = ref();
   onMounted(() => {
-    showInfoRef.value.foo() // 子组件中必须通过defineExpose函数将foo函数暴露出去才能进行调用(重要)
-  })
+    showInfoRef.value.foo(); // 子组件中必须通过defineExpose函数将foo函数暴露出去才能进行调用(重要)
+  });
 </script>
 
 <style scoped></style>
@@ -3549,28 +3549,28 @@ export default function (titleValue) {
   defineProps({
     name: {
       type: String,
-      default: '默认值',
+      default: "默认值",
     },
     age: {
       type: Number,
       default: 0,
     },
-  })
+  });
 
   // 2.defineEmits子传父
-  const emits = defineEmits(['infoBtnClick'])
+  const emits = defineEmits(["infoBtnClick"]);
   function btnClick() {
-    emits('infoBtnClick', '哈哈哈')
+    emits("infoBtnClick", "哈哈哈");
   }
 
   // foo函数
   function foo() {
-    console.log('showInfo foo函数被调用')
+    console.log("showInfo foo函数被调用");
   }
   // defineExpose暴露foo函数，使得父组件能够进行调用
   defineExpose({
     foo,
-  })
+  });
 </script>
 ```
 
@@ -3595,22 +3595,22 @@ export default function (titleValue) {
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { ref } from "vue";
 
-  import HeaderContent from './components/HeaderContent.vue'
-  import HomeItem from './components/HomeItem.vue'
+  import HeaderContent from "./components/HeaderContent.vue";
+  import HomeItem from "./components/HomeItem.vue";
 
   // 1.获取数据
   // import resData from './data/high_score.json'
   // console.log(resData)
   // 2.模拟网络请求获取数据
-  const resData = ref({})
+  const resData = ref({});
   setTimeout(() => {
-    import('./data/high_score.json').then((res) => {
-      resData.value = res.default
-      console.log(res.default)
-    })
-  }, 500)
+    import("./data/high_score.json").then((res) => {
+      resData.value = res.default;
+      console.log(res.default);
+    });
+  }, 500);
 </script>
 
 <style scoped>
@@ -3644,10 +3644,10 @@ export default function (titleValue) {
   export default {
     data() {
       return {
-        color: 'red',
-      }
+        color: "red",
+      };
     },
-  }
+  };
 </script>
 
 <style>
@@ -3666,13 +3666,13 @@ export default function (titleValue) {
 
 <script setup>
   const theme = {
-    color: 'red',
-  }
+    color: "red",
+  };
 </script>
 
 <style scoped>
   p {
-    color: v-bind('theme.color');
+    color: v-bind("theme.color");
   }
 </style>
 ```
@@ -3684,18 +3684,18 @@ export default function (titleValue) {
 ```vue
 <script setup lang="ts">
   const props = defineProps<{
-    levelFirstOptions: { value: string | number; label: string }[]
-  }>()
+    levelFirstOptions: { value: string | number; label: string }[];
+  }>();
 
   const emit = defineEmits<{
-    (e: 'refresh'): void
-  }>()
+    (e: "refresh"): void;
+  }>();
 
-  const options = ref()
+  const options = ref();
 
   onMounted(() => {
-    getCampusList()
-  })
+    getCampusList();
+  });
 
   // 获取校区列表
   const getCampusList = async () => {
@@ -3704,27 +3704,27 @@ export default function (titleValue) {
         pageNum: 1,
         size: 1000,
         dataKind: 1, // 假设1代表校区类型
-      })
+      });
       if (res.data && (res.data as any).records) {
-        options.value = (res.data as any).records
+        options.value = (res.data as any).records;
       }
     } catch (error) {
-      console.error('获取校区列表失败:', error)
+      console.error("获取校区列表失败:", error);
     }
-  }
+  };
 
   watch(
     () => formData.enrollmentYear,
     (newValue, oldValue) => {
       if (newValue) {
-        formData.name = dayjs(toRaw(newValue)).format('YYYY') + '级'
+        formData.name = dayjs(toRaw(newValue)).format("YYYY") + "级";
       }
     },
     {
       immediate: false, // 初始化立即监听
       deep: false,
     },
-  )
+  );
 </script>
 ```
 
@@ -3733,25 +3733,25 @@ export default function (titleValue) {
 **useRoundId.ts**
 
 ```ts
-import { ref } from 'vue'
-import { getGradeList, getClassListByGrade, getTermList } from '@/api/modules/schoolWork'
-import dayjs from 'dayjs'
-import { selElectiveRulePageList } from '@/api/modules/teacherEnd'
+import { ref } from "vue";
+import { getGradeList, getClassListByGrade, getTermList } from "@/api/modules/schoolWork";
+import dayjs from "dayjs";
+import { selElectiveRulePageList } from "@/api/modules/teacherEnd";
 
 export function useRoundId() {
-  const currentTerm = ref<any>({})
-  const roundId = ref<string>('')
+  const currentTerm = ref<any>({});
+  const roundId = ref<string>("");
 
   const loadTermList = async () => {
     try {
-      const res: any = await getTermList({ current: 1, size: 99999 })
+      const res: any = await getTermList({ current: 1, size: 99999 });
       // console.log("%c Line:161 🍋 res", "color:#465975", res);
 
       if (res?.data?.records?.length) {
       } else {
       }
     } catch (error) {}
-  }
+  };
 
   const getTermRoundId = async () => {
     const res: any = await selElectiveRulePageList({
@@ -3759,15 +3759,15 @@ export function useRoundId() {
       size: 10,
       termId: termId,
       termIndex: termIndex,
-    })
-  }
+    });
+  };
 
   return {
     currentTerm,
     roundId,
     loadTermList,
     getTermRoundId,
-  }
+  };
 }
 ```
 
@@ -3775,10 +3775,10 @@ export function useRoundId() {
 
 ```vue
 <script setup lang="ts">
-  import { useRoundId } from '@/hooks/useRoundId'
-  const { currentTerm, roundId, loadTermList, getTermRoundId } = useRoundId()
+  import { useRoundId } from "@/hooks/useRoundId";
+  const { currentTerm, roundId, loadTermList, getTermRoundId } = useRoundId();
 
-  console.log(currentTerm.value, roundId.value)
+  console.log(currentTerm.value, roundId.value);
 </script>
 ```
 
@@ -3790,8 +3790,8 @@ export function useRoundId() {
 <script setup lang="tsx">
   const columns: any = [
     {
-      label: '状态',
-      prop: 'status',
+      label: "状态",
+      prop: "status",
       width: 100,
       render: (scope: any) => {
         return (
@@ -3801,16 +3801,16 @@ export function useRoundId() {
             inactive-value={0}
             onChange={(val: number) => handleStatusChange(scope.row, val)}
           />
-        )
+        );
       },
     },
     {
-      prop: 'operation',
-      label: '操作',
+      prop: "operation",
+      label: "操作",
       width: 180,
-      fixed: 'right',
-      slot: 'operation',
+      fixed: "right",
+      slot: "operation",
     },
-  ]
+  ];
 </script>
 ```

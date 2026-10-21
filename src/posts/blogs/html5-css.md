@@ -1,7 +1,7 @@
 ---
-title: 'html5-css'
+title: "html5-css"
 date: 2021-4-24 23:58:00
-permalink: '/posts/blogs/html5-css'
+permalink: "/posts/blogs/html5-css"
 isTimeLine: true
 # sidebar: auto
 # sidebarDepth: 1
@@ -598,7 +598,7 @@ background: rgba(0,0,0,1)  最后一个参数设置透明度
 
 ```css
 background:
-  url('../../images/---.png') no-repeat 0px 0px,
+  url("../../images/---.png") no-repeat 0px 0px,
   linear-gradient(to right, #009cff, #39d7ff);
 ```
 
@@ -608,8 +608,8 @@ background:
 // 全局样式文件添加 global.scss 或 default.module.scss
 :global {
   @font-face {
-    font-family: 'YouSheBiaoTiHei';
-    src: url('./fonts/YouSheBiaoTiHei-2.ttf');
+    font-family: "YouSheBiaoTiHei";
+    src: url("./fonts/YouSheBiaoTiHei-2.ttf");
   }
 }
 
@@ -930,7 +930,7 @@ export default observer(RightThird);
       body {
         background: #020438;
         font:
-          14px/1 'Open Sans',
+          14px/1 "Open Sans",
           helvetica,
           sans-serif;
       }
@@ -1075,26 +1075,26 @@ export default observer(RightThird);
 
     <script>
       window.onload = function () {
-        const waterEl = document.getElementById('water')
-        const countEl = document.getElementById('count')
+        const waterEl = document.getElementById("water");
+        const countEl = document.getElementById("count");
 
         // 移动高度从100组件减小
-        let transformHeight = 100
+        let transformHeight = 100;
 
-        let interval = null
+        let interval = null;
         interval = setInterval(() => {
           if (100 - transformHeight === 5) {
-            clearInterval(interval)
+            clearInterval(interval);
           }
           if (transformHeight >= 0) {
-            waterEl.style.transform = `translate(0, ${transformHeight}%)`
-            countEl.innerHTML = 100 - transformHeight
-            transformHeight--
+            waterEl.style.transform = `translate(0, ${transformHeight}%)`;
+            countEl.innerHTML = 100 - transformHeight;
+            transformHeight--;
           } else {
-            clearInterval(interval)
+            clearInterval(interval);
           }
-        }, 60)
-      }
+        }, 60);
+      };
     </script>
   </body>
 </html>
