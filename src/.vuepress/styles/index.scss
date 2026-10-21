@@ -69,3 +69,19 @@ div[class*="language-"],
 html:not([data-theme='dark']) .shiki span[style*='--shiki-light:white'] {
   color: #e45649; // one-light 的标签红，也可以用 #383A42（默认前景灰）
 }
+
+// ============ 搜索建议下拉：限高 300px，超出滚动 ============
+.search-box .suggestions {
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: thin; // Firefox 细滚动条
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: var(--vp-c-border);
+  }
+}

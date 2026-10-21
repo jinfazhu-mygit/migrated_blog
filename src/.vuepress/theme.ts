@@ -184,7 +184,10 @@ export default hopeTheme({
     //   suggestion: true,
     // },
 
-    search: true,
+    // 默认 maxSuggestions 为 5，凑够 5 条就停止遍历，导致大量命中的标题被丢掉
+    search: {
+      maxSuggestions: 50,
+    },
 
     // 如果你需要 PWA。安装 @vuepress/plugin-pwa 并取消下方注释
     // pwa: {
