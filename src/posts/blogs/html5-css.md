@@ -594,7 +594,7 @@ background: red url() no-repeat scroll top left    //背景图片复合写法
 background: rgba(0,0,0,1)  最后一个参数设置透明度
 ```
 
-### 颜色渐变按钮
+### 颜色渐变
 
 ```css
 background:
